@@ -1,0 +1,9 @@
+/* Local artwork shared by the web page and the Android application. */
+.game-icon{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;flex:none;vertical-align:middle;border-radius:50%;background:#eee0b9;border:1px solid #b48a4e;box-shadow:0 1px 3px #0003;overflow:hidden;line-height:1}
+.game-icon img{display:block;width:26px;height:27px;object-fit:contain;pointer-events:none;user-select:none}
+.game-icon-yard{background:#e4d6b5}
+.game-icon-yard img{height:26px}
+.sidebar .nav-icon.game-icon{display:inline-flex;width:32px;height:32px}
+.owned-empty>.game-icon{display:flex;width:52px;height:52px;margin:0 auto}
+.owned-empty>.game-icon img{width:44px;height:44px}
+@media(max-width:650px){.sidebar .nav-icon.game-icon{width:27px;height:27px}.sidebar .nav-icon.game-icon img{width:23px;height:23px}}

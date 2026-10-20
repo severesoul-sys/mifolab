@@ -1,0 +1,36 @@
+# Credentials and machine-specific data
+.local/
+.env
+.env.*
+!.env.example
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.pem
+*.key
+*password*.txt
+local.properties
+
+# Generated output and tools
+.build/
+dist/
+build/
+node_modules/
+.gradle/
+.idea/
+*.apk
+*.aab
+*.apks
+*.dex
+*.class
+*.log
+server-output.txt
+server-errors.txt
+.DS_Store
+Thumbs.db
+
+# Optional local reference material
+web/rankings.json
+web/rankings.csv
+web/RANKING.md

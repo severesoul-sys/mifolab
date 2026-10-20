@@ -1,0 +1,414 @@
+{
+  "format": "mifozov-observer-collection",
+  "version": 1,
+  "exportedAt": 1792404000000,
+  "observerVersion": "0.11.0",
+  "gameVersion": "0.37",
+  "total": 10,
+  "spirits": [
+    {
+      "id": "test-spirit-1",
+      "speciesId": "indrik",
+      "speciesName": "Индрик",
+      "name": "Тест 1 («Индрик»)",
+      "rarity": "legendary",
+      "elements": [
+        "zemlya"
+      ],
+      "level": 40,
+      "iv": {
+        "zhivitsa": 0,
+        "sila": 2,
+        "stoikost": 4,
+        "pryt": 6,
+        "duh": 8
+      },
+      "ivPercent": 27,
+      "nature": {
+        "up": "duh",
+        "down": "sila"
+      },
+      "baseStats": {
+        "zhivitsa": 260,
+        "sila": 220,
+        "stoikost": 250,
+        "pryt": 160,
+        "duh": 210
+      },
+      "stats": {
+        "zhivitsa": 260,
+        "sila": 199,
+        "stoikost": 254,
+        "pryt": 166,
+        "duh": 239
+      },
+      "hp": 1040,
+      "hpMax": 1040,
+      "health": 100,
+      "shiny": false,
+      "favorite": false,
+      "guarding": true,
+      "buddy": false
+    },
+    {
+      "id": "test-spirit-2",
+      "speciesId": "rarog",
+      "speciesName": "Рарог",
+      "name": "Тест 2 («Рарог»)",
+      "rarity": "rare",
+      "elements": [
+        "ogon",
+        "veter"
+      ],
+      "level": 37,
+      "iv": {
+        "zhivitsa": 3,
+        "sila": 5,
+        "stoikost": 7,
+        "pryt": 9,
+        "duh": 11
+      },
+      "ivPercent": 47,
+      "nature": {
+        "up": "",
+        "down": ""
+      },
+      "baseStats": {
+        "zhivitsa": 150,
+        "sila": 180,
+        "stoikost": 120,
+        "pryt": 190,
+        "duh": 160
+      },
+      "stats": {
+        "zhivitsa": 142,
+        "sila": 172,
+        "stoikost": 118,
+        "pryt": 185,
+        "duh": 159
+      },
+      "hp": 284,
+      "hpMax": 568,
+      "health": 50,
+      "shiny": false,
+      "favorite": false,
+      "guarding": false,
+      "buddy": false
+    },
+    {
+      "id": "test-spirit-3",
+      "speciesId": "bayun",
+      "speciesName": "Кот Баюн",
+      "name": "Тест 3 («Кот Баюн»)",
+      "rarity": "uncommon",
+      "elements": [
+        "veter"
+      ],
+      "level": 34,
+      "iv": {
+        "zhivitsa": 6,
+        "sila": 8,
+        "stoikost": 10,
+        "pryt": 12,
+        "duh": 14
+      },
+      "ivPercent": 67,
+      "nature": {
+        "up": "duh",
+        "down": "sila"
+      },
+      "baseStats": {
+        "zhivitsa": 140,
+        "sila": 120,
+        "stoikost": 110,
+        "pryt": 120,
+        "duh": 150
+      },
+      "stats": {
+        "zhivitsa": 125,
+        "sila": 99,
+        "stoikost": 103,
+        "pryt": 113,
+        "duh": 155
+      },
+      "hp": 500,
+      "hpMax": 500,
+      "health": 100,
+      "shiny": true,
+      "favorite": false,
+      "guarding": false,
+      "buddy": false
+    },
+    {
+      "id": "test-spirit-4",
+      "speciesId": "gorynych",
+      "speciesName": "Змей Горыныч",
+      "name": "Тест 4 («Змей Горыныч»)",
+      "rarity": "legendary",
+      "elements": [
+        "ogon",
+        "nav"
+      ],
+      "level": 31,
+      "iv": {
+        "zhivitsa": 9,
+        "sila": 11,
+        "stoikost": 13,
+        "pryt": 15,
+        "duh": 1
+      },
+      "ivPercent": 65,
+      "nature": {
+        "up": "",
+        "down": ""
+      },
+      "baseStats": {
+        "zhivitsa": 220,
+        "sila": 290,
+        "stoikost": 210,
+        "pryt": 210,
+        "duh": 155
+      },
+      "stats": {
+        "zhivitsa": 181,
+        "sila": 238,
+        "stoikost": 176,
+        "pryt": 178,
+        "duh": 123
+      },
+      "hp": 724,
+      "hpMax": 724,
+      "health": 100,
+      "shiny": false,
+      "favorite": true,
+      "guarding": false,
+      "buddy": true
+    },
+    {
+      "id": "test-spirit-5",
+      "speciesId": "shchuka",
+      "speciesName": "Велевница",
+      "name": "Тест 5 («Велевница»)",
+      "rarity": "rare",
+      "elements": [
+        "voda"
+      ],
+      "level": 28,
+      "iv": {
+        "zhivitsa": 12,
+        "sila": 14,
+        "stoikost": 0,
+        "pryt": 2,
+        "duh": 4
+      },
+      "ivPercent": 43,
+      "nature": {
+        "up": "duh",
+        "down": "sila"
+      },
+      "baseStats": {
+        "zhivitsa": 165,
+        "sila": 220,
+        "stoikost": 160,
+        "pryt": 160,
+        "duh": 120
+      },
+      "stats": {
+        "zhivitsa": 127,
+        "sila": 152,
+        "stoikost": 115,
+        "pryt": 117,
+        "duh": 98
+      },
+      "hp": 508,
+      "hpMax": 508,
+      "health": 100,
+      "shiny": false,
+      "favorite": false,
+      "guarding": false,
+      "buddy": false
+    },
+    {
+      "id": "test-spirit-6",
+      "speciesId": "finist",
+      "speciesName": "Финист",
+      "name": "Тест 6 («Финист»)",
+      "rarity": "rare",
+      "elements": [
+        "veter",
+        "yav"
+      ],
+      "level": 25,
+      "iv": {
+        "zhivitsa": 15,
+        "sila": 1,
+        "stoikost": 3,
+        "pryt": 5,
+        "duh": 7
+      },
+      "ivPercent": 41,
+      "nature": {
+        "up": "",
+        "down": ""
+      },
+      "baseStats": {
+        "zhivitsa": 170,
+        "sila": 225,
+        "stoikost": 160,
+        "pryt": 160,
+        "duh": 120
+      },
+      "stats": {
+        "zhivitsa": 120,
+        "sila": 147,
+        "stoikost": 106,
+        "pryt": 107,
+        "duh": 83
+      },
+      "hp": 480,
+      "hpMax": 480,
+      "health": 100,
+      "shiny": false,
+      "favorite": false,
+      "guarding": false,
+      "buddy": false
+    },
+    {
+      "id": "test-spirit-7",
+      "speciesId": "kolobok",
+      "speciesName": "Колобок",
+      "name": "Тест 7 («Колобок»)",
+      "rarity": "common",
+      "elements": [
+        "yav",
+        "zemlya"
+      ],
+      "level": 22,
+      "iv": {
+        "zhivitsa": 2,
+        "sila": 4,
+        "stoikost": 6,
+        "pryt": 8,
+        "duh": 10
+      },
+      "ivPercent": 40,
+      "nature": {
+        "up": "duh",
+        "down": "sila"
+      },
+      "baseStats": {
+        "zhivitsa": 85,
+        "sila": 95,
+        "stoikost": 75,
+        "pryt": 135,
+        "duh": 85
+      },
+      "stats": {
+        "zhivitsa": 50,
+        "sila": 52,
+        "stoikost": 47,
+        "pryt": 83,
+        "duh": 61
+      },
+      "hp": 200,
+      "hpMax": 200,
+      "health": 100,
+      "shiny": false,
+      "favorite": false,
+      "guarding": false,
+      "buddy": false
+    },
+    {
+      "id": "test-spirit-8",
+      "speciesId": "mora",
+      "speciesName": "Мора",
+      "name": "Тест 8 («Мора»)",
+      "rarity": "uncommon",
+      "elements": [
+        "nav"
+      ],
+      "level": 19,
+      "iv": {
+        "zhivitsa": 5,
+        "sila": 7,
+        "stoikost": 9,
+        "pryt": 11,
+        "duh": 13
+      },
+      "ivPercent": 60,
+      "nature": {
+        "up": "",
+        "down": ""
+      },
+      "baseStats": {
+        "zhivitsa": 115,
+        "sila": 105,
+        "stoikost": 110,
+        "pryt": 135,
+        "duh": 180
+      },
+      "stats": {
+        "zhivitsa": 61,
+        "sila": 57,
+        "stoikost": 61,
+        "pryt": 75,
+        "duh": 99
+      },
+      "hp": 244,
+      "hpMax": 244,
+      "health": 100,
+      "shiny": false,
+      "favorite": false,
+      "guarding": false,
+      "buddy": false
+    },
+    {
+      "id": "test-spirit-9",
+      "speciesId": "rarog",
+      "speciesName": "Рарог",
+      "name": "Тест 9 («Рарог»)",
+      "rarity": "rare",
+      "elements": [
+        "ogon",
+        "veter"
+      ],
+      "level": 16,
+      "iv": {
+        "zhivitsa": 8,
+        "sila": 10,
+        "stoikost": 12,
+        "pryt": 14,
+        "duh": 0
+      },
+      "ivPercent": 59,
+      "nature": {
+        "up": "duh",
+        "down": "sila"
+      },
+      "baseStats": {
+        "zhivitsa": 150,
+        "sila": 180,
+        "stoikost": 120,
+        "pryt": 190,
+        "duh": 160
+      },
+      "stats": {
+        "zhivitsa": 70,
+        "sila": 76,
+        "stoikost": 58,
+        "pryt": 91,
+        "duh": 78
+      },
+      "hp": 0,
+      "hpMax": 280,
+      "health": 0,
+      "shiny": false,
+      "favorite": false,
+      "guarding": false,
+      "buddy": false
+    }
+  ],
+  "unavailable": [
+    "future-species [test-unknown]: вид отсутствует в каталоге"
+  ]
+}

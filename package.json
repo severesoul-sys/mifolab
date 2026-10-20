@@ -1,0 +1,16 @@
+{
+  "name": "mifolab",
+  "version": "1.0.4",
+  "private": true,
+  "description": "Android and web battle simulator for Mifozov spirits",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node web/server.mjs",
+    "test": "node --test web/tests/*.test.cjs",
+    "build:android": "node tools/build-android.mjs",
+    "build:release": "node tools/build-android.mjs --release",
+    "build:unsigned": "node tools/build-android.mjs --unsigned",
+    "test:android": "node tools/test-android.mjs",
+    "check:publish": "node tools/check-publish.mjs"
+  }
+}

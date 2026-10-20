@@ -1,0 +1,305 @@
+/* Compact phone presentation. Detailed controls keep their original state. */
+:root{--radius:12px}
+html{scroll-padding-top:52px}
+body{font-size:13px}
+button,input,select{font-size:13px}
+input,select{min-height:40px;padding:8px;border-radius:7px}
+input[type=checkbox]{width:18px;height:18px;flex:none}
+label{font-size:11px;gap:4px;min-width:0}
+h2{font-size:21px;letter-spacing:-.5px}
+p{margin:6px 0 10px}
+.button{min-height:40px;font-size:12px;padding:8px 11px;gap:8px;border-radius:8px}
+.text-button{min-height:36px}
+.icon-button{min-width:36px;min-height:36px}
+.card{padding:12px}
+.section-head{gap:8px;margin-bottom:10px}
+.section-head>div{min-width:0}
+.small-note{font-size:11px;line-height:1.5;margin-top:8px}
+.eyebrow{font-size:9px;letter-spacing:.8px;margin-bottom:5px}
+.pill{font-size:10px;padding:4px 8px}
+.notice{font-size:12px;padding:10px;margin-bottom:10px}
+
+.mobile-header{height:44px;padding:0 12px}
+.mobile-header>a{font-size:17px;letter-spacing:.7px}
+.mobile-header button{padding:6px 10px;min-height:34px;font-size:11px}
+.sidebar nav{padding:2px}
+.sidebar .nav-item{min-height:50px;padding:1px;gap:2px;border-radius:8px}
+.sidebar .nav-icon{font-size:19px;line-height:1;display:grid;place-items:center;width:32px;height:32px}
+.sidebar .nav-icon .game-icon{width:32px;height:32px}
+.sidebar .nav-icon .game-icon img{width:26px;height:27px}
+.sidebar .nav-icon .game-icon-yard img{height:26px}
+.mobile-header #mobile-account{display:inline-flex;align-items:center;justify-content:center;gap:1px}
+.mobile-header #mobile-account>.game-icon{width:22px;height:22px;margin:0}
+.mobile-header #mobile-account>.game-icon img{width:19px;height:19px}
+main{padding:10px 10px 72px}
+.page-header{display:none}
+.page-header p{display:none}
+.page-header h1{font-size:24px;letter-spacing:-.6px}
+.footer{line-height:1.5;gap:5px;margin-top:18px;padding-top:12px}
+
+/* Disclosures move existing nodes instead of making duplicate controls. */
+.mobile-fold>summary,.mobile-battle-rules>summary,.mobile-help>summary{min-height:34px;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;list-style:none;color:var(--green);font-size:12px;font-weight:600}
+.mobile-fold>summary::-webkit-details-marker,.mobile-battle-rules>summary::-webkit-details-marker,.mobile-help>summary::-webkit-details-marker{display:none}
+.mobile-fold>summary:after,.mobile-battle-rules>summary:after,.mobile-help>summary:after{content:'+';font-size:18px;line-height:1;flex:none}
+.mobile-fold[open]>summary:after,.mobile-battle-rules[open]>summary:after,.mobile-help[open]>summary:after{content:'−'}
+.mobile-fold[open]>summary{margin-bottom:10px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.mobile-fold-body>.section-head h2,.mobile-fold-body>.section-head .eyebrow{display:none}
+.mobile-fold-body>.section-head:has(>div:only-child):not(:has(p,.button,label)){display:none}
+.mobile-fold-body{min-width:0}
+.mobile-help{margin-top:6px}
+.mobile-help>summary{font-weight:400;font-size:11px;min-height:32px}
+
+/* Both opponents fit side by side; opening details uses the full row. */
+.battle-toolbar{gap:8px;margin-bottom:8px}
+.segmented{padding:3px;border-radius:8px}
+.segmented button{min-height:34px;padding:6px 13px;font-size:12px}
+.battle-toolbar>.text-button{font-size:11px}
+.rune-settings .inline-field{width:100%;justify-content:space-between;margin:5px 0}
+.rune-settings .inline-field select{min-width:0;flex:1;max-width:80%;font-size:12px}
+.mode-note{font-size:11px;line-height:1.5;margin:6px 0}
+.teams-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:start}
+.team-card-top{padding:7px 8px}
+.team-label{font-size:10px;letter-spacing:.4px;gap:5px}
+.team-label>span{width:18px;height:18px;font-size:10px;flex:none}
+.team-count{display:none}
+.team-body{padding:9px}
+.team-card:focus-within{position:relative;z-index:12}
+.team-card:has(.fighter-details[open]){grid-column:1/-1}
+.fighter-identity{gap:8px;margin-bottom:8px}
+.fighter-identity .sigil{display:none}
+.fighter-identity .identity-info{display:flex;flex-direction:column}
+.fighter-identity h2{font-size:18px;letter-spacing:-.35px;margin:0 0 4px;order:-1;overflow-wrap:normal}
+.identity-metadata{font-size:10px;line-height:1.4;margin-bottom:4px}
+.type-chip{font-size:10px;padding:2px 6px}
+.chips{gap:4px}
+.species-picker{margin-bottom:8px}
+.searchable-picker>label{font-size:11px;gap:4px;margin-bottom:4px}
+.searchable-picker>label span,.species-search-hint{display:none}
+.team-card .searchable-picker>label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);margin:0;padding:0;white-space:nowrap}
+.species-search-control input{min-height:40px;font-size:13px;padding:8px 28px 8px 24px;text-overflow:ellipsis}
+.species-search-icon{width:12px;height:12px;left:7px;top:14px}
+.species-toggle{width:28px}
+.species-popup{width:min(320px,calc(100vw - 40px));right:auto}
+.team-b .species-popup{left:auto;right:0}
+.teams-grid:has(.fighter-details[open]) .team-b .species-popup{left:0;right:auto}
+.species-results{max-height:min(250px,35vh)}
+.species-option{min-height:44px;font-size:13px;gap:8px}
+.species-option small,.species-search-status{font-size:10px}
+.form-grid{gap:6px}
+.form-grid input{padding:8px 5px}
+.team-body>.form-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.team-body>.form-grid label{font-size:10px;white-space:nowrap}
+.stat-summary{gap:3px;padding-top:8px;margin-top:8px}
+.stat-summary b{font-size:14px}
+.stat-summary small{font-size:10px}
+.team-card:not(:has(.fighter-details[open])) .stat-summary small{font-size:0}
+.team-card:not(:has(.fighter-details[open])) .stat-summary small:before{font-size:10px}
+.team-card:not(:has(.fighter-details[open])) .stat-summary>div:nth-child(1) small:before{content:'Ж'}
+.team-card:not(:has(.fighter-details[open])) .stat-summary>div:nth-child(2) small:before{content:'С'}
+.team-card:not(:has(.fighter-details[open])) .stat-summary>div:nth-child(3) small:before{content:'Ст'}
+.team-card:not(:has(.fighter-details[open])) .stat-summary>div:nth-child(4) small:before{content:'П'}
+.team-card:not(:has(.fighter-details[open])) .stat-summary>div:nth-child(5) small:before{content:'Д'}
+.team-power{font-size:10px;gap:3px;flex-wrap:wrap;margin-top:6px}
+.team-card:not(:has(.fighter-details[open])) .team-power>span{display:none}
+.fighter-details{margin-top:5px}
+.fighter-details summary{min-height:36px;font-size:11px;gap:8px}
+.iv-grid{gap:5px;margin-top:8px}
+.iv-grid input{min-height:40px}
+.nature-grid{gap:8px;margin-top:8px}
+.check-label{font-size:11px;margin-top:8px;min-height:30px}
+.owned-origin{font-size:10px;margin:0 0 7px;padding-left:6px}
+.team-card:not(:has(.fighter-details[open])) .owned-origin small{display:none}
+.squad-strip{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-bottom:8px}
+.squad-slot{font-size:10px;min-height:42px;padding:4px 2px;gap:1px;border-radius:6px}
+.team-card .squad-slot strong{display:none}
+.squad-slot small{font-size:9px}
+.slot-tools{font-size:10px;margin-bottom:6px;gap:4px;flex-wrap:wrap}
+.slot-tools button{min-height:32px;font-size:10px;padding:4px}
+.rune-settings{margin-top:10px;padding:4px 12px}
+.rune-policy-grid{gap:8px}
+.rune-policy-grid select{padding:8px 5px}
+.probability{font-size:11px}
+.run-bar{gap:8px;margin:10px 0 16px}
+.run-actions{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:6px}
+.run-actions .button{font-size:11px;min-height:40px;padding:8px}
+.run-actions .primary{grid-column:1/-1;order:-1;font-size:13px}
+.mobile-extra-actions{display:flex;gap:6px;margin:10px 0}
+.mobile-extra-actions .button{flex:1;font-size:11px}
+.seed-field{grid-template-columns:1fr 36px;margin:10px 0}
+.seed-field input{height:36px;min-height:36px}
+.result-card{margin:12px 0}
+.result-metrics{gap:14px;margin:12px 0}
+.metric b{font-size:20px}
+.battle-chart{height:140px}
+
+.ranking-copy{display:none}
+.ranking-intro{grid-template-columns:1fr;gap:0;margin-bottom:10px}
+.ranking-hero{padding:12px;margin:0;gap:13px;min-height:88px}
+.ranking-hero .sigil{width:44px;height:44px;font-size:23px}
+.ranking-hero h2{font-size:21px;margin:3px 0}
+.ranking-hero strong{font-size:18px}
+.ranking-hero .eyebrow{margin-bottom:3px}
+.ranking-hero:after{font-size:140px;top:-40px}
+.ranking-hero>div:last-child{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:8px;flex:1}
+.ranking-hero>div:last-child>.eyebrow{grid-column:1/-1}
+.ranking-hero>div:last-child>h2,.ranking-hero>div:last-child>small,.ranking-hero>div:last-child>.chips{grid-column:1}
+.ranking-hero>div:last-child>div:last-child{grid-column:2;grid-row:2/5;align-self:center;text-align:right;margin-top:0!important}
+.ranking-hero>div:last-child>div:last-child small{display:none}
+.ranking-settings{margin-bottom:10px;padding:4px 12px}
+.ranking-controls{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.ranking-controls .segmented,.ranking-controls input{grid-column:1/-1;width:100%}
+.ranking-controls select{width:100%;min-width:0}
+.ranking-summary{font-size:10px;line-height:1.4;margin-bottom:6px}
+.ranking-table th,.ranking-table td{padding:8px}
+.ranking-table .species-cell strong{margin-bottom:3px}
+.ranking-table .rank-number{font-size:17px;min-width:20px}
+.rank-action{font-size:11px;padding:6px 8px}
+.matchup-columns{gap:12px;margin-top:12px}
+.matchup-item{padding:5px 0}
+.matchup-item button{min-height:36px}
+.detail-actions{gap:6px;margin-top:12px}
+
+.mobile-account-panel{margin-bottom:10px}
+.mobile-account-panel .eyebrow{display:none}
+.mobile-account-panel h2{font-size:21px;margin:0 0 6px}
+.mobile-account-panel p{font-size:12px;line-height:1.5}
+.mobile-code-row{gap:6px;margin:6px 0}
+.mobile-code-row input{font-size:18px;letter-spacing:2px;padding:8px 10px}
+.mobile-code-row .button{min-width:100px}
+.mobile-account-actions{gap:6px}
+.mobile-account-state{margin-bottom:5px!important}
+.mobile-account-panel small{font-size:10px}
+.mobile-account-panel.connected>.mobile-login-help{display:none}
+.mobile-account-panel.connected>h2{display:none}
+.mobile-account-panel.connected:not(.busy) #mobile-account-state:not(.error){display:none}
+.owned-empty{padding:16px 10px}
+.owned-empty>span{font-size:38px}
+.owned-empty h2{font-size:22px;margin:8px}
+.owned-empty p{font-size:12px;line-height:1.6}
+.owned-summary{gap:8px;padding:10px 2px}
+.owned-summary b{font-size:20px}
+.owned-summary>div:last-child b{font-size:14px;margin:0}
+.owned-summary>div:last-child{display:none}
+.owned-tools{padding:4px 12px;margin-bottom:8px}
+.owned-tools .card{padding:10px 0;margin:0;border:0;border-radius:0;background:none}
+.owned-tools .card+.card{border-top:1px solid var(--line)}
+.owned-settings .section-head,.owned-builder .section-head,.owned-arena .section-head,.owned-raid-target .section-head{gap:8px}
+.owned-settings .section-head h2,.owned-builder h2,.owned-arena h2,.owned-raid-target h2{font-size:20px}
+.owned-targets{gap:8px}
+.owned-arena-teams{grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;font-size:11px}
+.owned-squad{gap:6px;margin:10px 0}
+.owned-squad>div{padding:9px}
+.owned-squad strong{font-size:17px}
+.owned-pagination{gap:14px;margin:10px 0;font-size:11px}
+
+.raid-layout{gap:10px;margin-bottom:10px}
+.raid-boss-panel select{margin-bottom:10px}
+.raid-boss-identity{gap:10px}
+.raid-boss-sigil{width:44px;height:50px;font-size:24px}
+.raid-boss-identity h2{font-size:21px;margin:2px 0 5px}
+.raid-stars{font-size:12px;letter-spacing:2px}
+.raid-boss-identity .chronicle-number{display:inline;margin-right:6px;font-size:10px}
+.raid-boss-identity .chips{display:inline-flex}
+.raid-boss-stats{margin:10px 0;padding-top:8px;gap:8px}
+.raid-boss-stats strong{font-size:20px}
+.raid-boss-panel .small-note{margin:6px 0}
+.raid-party-panel .form-grid{gap:8px}
+.raid-party-panel select{font-size:12px}
+.raid-party-panel h2,.raid-team-panel h2,.raid-result h2{font-size:21px}
+.raid-party-panel .small-note{font-size:11px;margin:8px 0;line-height:1.5}
+.raid-actions{gap:6px}
+.raid-team-panel,.raid-runes,.raid-attackers,.raid-method{margin-bottom:10px}
+.raid-team-panel .section-head{gap:8px}
+.raid-team-panel .section-head .button{font-size:11px;padding:8px;min-width:0;flex:1}
+.raid-team-panel .eyebrow{font-size:9px;margin-bottom:4px}
+.raid-collection-options{gap:6px 10px;margin-bottom:10px}
+.raid-team-panel .squad-strip{grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+.raid-team-panel .squad-slot{font-size:10px;padding:5px 2px}
+.raid-team-panel .squad-slot strong{font-size:16px}
+.raid-editor-head{gap:3px}
+.raid-editor-head .species-picker{margin-bottom:2px}
+.raid-slot-actions{gap:10px}
+.raid-spirit-title{gap:7px;margin:7px 0 10px}
+.raid-spirit-title h3{font-size:21px}
+.raid-runes{padding:4px 12px}
+.raid-runes .form-grid,.raid-rank-controls{gap:8px}
+.raid-runes .small-note,.raid-attackers .small-note{margin:8px 0;line-height:1.5}
+.raid-run{margin:12px 0;gap:8px}
+.raid-run .button{font-size:11px;min-height:40px;padding:8px}
+.raid-run .seed-field{margin:0}
+.raid-count-chart{gap:6px;margin:16px 0}
+.raid-count-chart strong{font-size:14px}
+.raid-add-slots{grid-template-columns:repeat(3,32px);gap:3px}
+.raid-add-slots button{min-width:32px}
+.raid-rank-table .rank-number{font-size:17px}
+
+.training-layout{gap:10px}
+.training-main,.training-info{padding:14px}
+.training-main .eyebrow{display:none}
+.training-main h2{font-size:25px;margin:0 0 8px}
+.training-main p,.training-info p{font-size:12px;line-height:1.5}
+.practice-shapes{gap:6px;margin:12px 0}
+.practice-shapes button{font-size:11px;min-height:70px;padding:8px 3px}
+.practice-shapes svg{width:32px;height:32px;margin-bottom:6px}
+.practice-settings{gap:10px;margin-bottom:12px}
+.training-info .rune-decor{font-size:40px}
+.training-info h2{font-size:22px;margin-bottom:10px}
+.rule-line{margin:12px 0}
+.practice-result{margin-top:12px}
+.practice-result strong{font-size:30px}
+dialog{padding:12px;border-radius:14px}
+dialog h2{font-size:24px}
+dialog p{margin-bottom:10px}
+.rune-dialog-footer .button{min-height:40px}
+.rune-dialog-head .icon-button{min-width:36px;min-height:36px}
+.toast{bottom:64px;font-size:12px;padding:10px 14px}
+.coverage-grid{gap:12px}
+.coverage-row{padding:6px 0;gap:6px}
+.coverage-card,.method-card{margin-top:10px}
+.coverage-card h2,.method-card h2{font-size:21px}
+.type-matrix td,.type-matrix th{padding:7px 3px;font-size:10px}
+.type-matrix .type-chip{font-size:8px;padding:2px 3px}
+.method-card p,.method-card ul{line-height:1.6}
+
+@media(max-width:649px){
+  .owned-table tr{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px 10px;padding:12px}
+  .owned-table td{font-size:12px}
+  .owned-table td:first-child{right:12px;top:14px;font-size:16px}
+  .owned-table td:nth-child(2){padding-right:28px}
+  .owned-table td:nth-child(4){grid-column:span 2}
+  .owned-table .owned-name{font-size:15px;min-height:32px;line-height:1.3}
+  .owned-table .owned-description{font-size:10px;margin:0 0 3px}
+  .owned-table td:before{margin-bottom:2px}
+  .owned-table td:last-child{margin-top:3px}
+  .owned-row-actions{gap:5px}
+  .owned-row-actions .rank-action{min-height:38px;font-size:11px}
+  .owned-table .win-cell strong{font-size:13px}
+  .owned-table .chips{gap:4px;margin-top:3px}
+}
+@media(min-width:650px){
+  main{padding:16px 20px 76px}
+  .team-body{padding:12px}
+  .fighter-identity .sigil{display:grid;width:44px;height:44px;font-size:22px}
+  .fighter-identity h2{min-height:0;font-size:21px}
+  .team-card:not(:has(.fighter-details[open])) .stat-summary small{font-size:10px}
+  .team-card:not(:has(.fighter-details[open])) .stat-summary small:before{display:none}
+  .squad-strip{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .team-card .squad-slot strong{display:block;font-size:14px}
+}
+@media(max-width:340px){
+  main{padding-inline:8px}
+  .team-body{padding:7px}
+  .team-label{font-size:9px;letter-spacing:0}
+  .fighter-identity h2{font-size:17px}
+  .team-body>.form-grid{gap:3px}
+  .team-body>.form-grid label,.team-power{font-size:9px}
+  .sidebar .nav-item>span:not(.nav-icon){font-size:8px}
+}
+@media(max-height:500px){
+  .mobile-header{height:38px}
+  .sidebar .nav-item{min-height:44px;padding:1px}
+  .sidebar .nav-icon,.sidebar .nav-icon .game-icon{width:26px;height:26px}
+  .sidebar .nav-icon .game-icon img{width:22px;height:22px}
+  dialog{padding:10px}dialog h2{font-size:20px}dialog p{margin:4px 0}
+  .drawing-field{width:min(100%,52vh)}
+}

@@ -1,0 +1,10 @@
+{
+  "name": "mifozov-battle-lab",
+  "version": "1.4.1",
+  "private": true,
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.cjs",
+    "rank": "node tools/rank.cjs"
+  }
+}
