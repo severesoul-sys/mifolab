@@ -8,7 +8,7 @@
   $('#mobile-account').addEventListener('click',()=>arena.navigate('collection'));
   const names={battle:['⚔','Арена'],rankings:['▥','Рейтинг'],raids:[gameIcon('raids'),'Рейды'],training:['◇','Руны'],elements:['✳','Справка'],collection:[gameIcon('yard'),'Мои духи']};
   const nav=$('.sidebar nav');for(const [id,[icon,label]] of Object.entries(names)){const button=nav.querySelector(`[data-tab="${id}"]`);button.setAttribute('aria-label',id==='elements'?'Стихии и отряд':id==='training'?'Тренировка рун':id==='rankings'?'Рейтинг духов':label);button.innerHTML=`<span class="nav-icon" aria-hidden="true">${icon}</span><span>${label}</span>`;nav.append(button);}
-  function selected(tab){document.documentElement.dataset.section=tab;header.querySelector('a').textContent=$('#page-title').textContent;nav.querySelectorAll('button').forEach(button=>button.setAttribute('aria-current',button.dataset.tab===tab?'page':'false'));}
+  function selected(tab){document.documentElement.dataset.section=tab;header.querySelector('a').textContent=$('#page-title').textContent;nav.querySelectorAll('button').forEach(button=>button.setAttribute('aria-current',button.dataset.tab===(tab==='upgrade'?'rankings':tab)?'page':'false'));}
   window.addEventListener('mifo-tab',event=>selected(event.detail));selected(location.hash.slice(1)||'battle');
 
   function disclosure(title,className){
@@ -75,7 +75,7 @@
       $('#mobile-account').classList.toggle('connected',!!event.connected);
     },
 
-    back(){if($('#rune-dialog').open){$('#rune-close').click();return true;}if(location.hash!=='#battle'){arena.navigate('battle');return true;}return false;}
+    back(){if($('#rune-dialog').open){$('#rune-close').click();return true;}if(location.hash==='#upgrade'){window.MifoUpgradeUI.back();return true;}if(location.hash!=='#battle'){arena.navigate('battle');return true;}return false;}
   };
   document.addEventListener('visibilitychange',()=>{if(document.hidden)arena.pause();});
   native.ready();

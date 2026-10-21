@@ -1,0 +1,48 @@
+.upgrade-entry{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.upgrade-entry .small-note{margin:0}
+.upgrade-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.upgrade-sources{margin-bottom:4px}
+.upgrade-intro{margin:5px 0 14px}
+.upgrade-layout{display:grid;grid-template-columns:minmax(280px,.85fr) minmax(0,1.15fr);gap:18px;align-items:start}
+.upgrade-controls{min-width:0}
+.upgrade-controls .species-popup{width:100%;left:0;right:auto}
+.upgrade-controls .species-option{align-items:flex-start;gap:8px}
+.upgrade-controls .species-option small{max-width:50%;text-align:right;white-space:normal}
+.upgrade-identity{margin:8px 0 14px}
+.upgrade-identity>small{display:block;color:var(--muted);margin-top:5px;font-size:11px}
+.upgrade-levels{grid-template-columns:repeat(3,minmax(0,1fr))}
+.upgrade-levels:has(#upgrade-alliv-label[hidden]){grid-template-columns:1fr 1fr}
+.upgrade-shortcuts{display:flex;gap:8px;margin:12px 0}
+.upgrade-shortcuts .button{flex:1;font-size:11px;white-space:normal;padding:8px}
+.upgrade-budget{margin-top:14px;border-top:1px solid var(--line);padding-top:8px}
+.upgrade-budget summary,.upgrade-steps summary{cursor:pointer;min-height:36px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--green);list-style:none;gap:10px}
+.upgrade-budget summary:after,.upgrade-steps summary:after{content:'+';font-size:18px}
+.upgrade-budget[open] summary:after,.upgrade-steps[open] summary:after{content:'−'}
+.upgrade-budget summary::-webkit-details-marker,.upgrade-steps summary::-webkit-details-marker{display:none}
+.upgrade-budget .form-grid{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:12px;gap:8px}
+.upgrade-controls input[readonly]{background:#eff1e6;color:#65765a}
+.upgrade-controls input{width:100%}
+.upgrade-controls input[type=checkbox]{width:18px;height:18px;flex:none}
+.upgrade-costs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 18px;padding:12px;background:#edf2e2;border-radius:10px}
+.upgrade-costs strong{display:block;font-size:22px;color:#47683d;font-variant-numeric:tabular-nums}
+.upgrade-costs small{color:#6d7e60;font-size:11px}
+.upgrade-costs>.notice{grid-column:1/-1;margin:0}
+.upgrade-stats{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+.upgrade-stats th,.upgrade-stats td{text-align:right;padding:8px 6px;border-bottom:1px solid #e4e9da;white-space:nowrap}
+.upgrade-stats th:first-child{text-align:left;font-weight:500}
+.upgrade-stats thead th{color:var(--muted);font-size:11px;font-weight:500}
+.upgrade-gain{color:#628548}
+.upgrade-stats tr.selected{background:#edf2e2}
+.upgrade-status{font-size:12px;background:#eef3e7;border-left:3px solid #90aa70;border-radius:6px;padding:8px 10px;margin-top:14px;color:#557146}
+.upgrade-status.limited{background:#fff2dc;border-color:#c99b5a;color:#866137}
+.upgrade-status p{margin:3px 0;line-height:1.5}
+.upgrade-steps{margin-top:12px;border-top:1px solid var(--line);padding-top:5px}
+.raid-pass-info{margin:10px 0;font-size:12px;color:var(--muted)}
+.raid-layout>.raid-pass-info{grid-column:1/-1;order:3;margin:0}
+.raid-pass-info summary{cursor:pointer;min-height:34px;display:flex;align-items:center;gap:8px}
+.raid-pass-info p{line-height:1.6}
+#page-upgrade .upgrade-intro{margin:4px 0 8px;font-size:11px}
+#page-upgrade .upgrade-identity{margin:5px 0 8px}
+#page-upgrade .upgrade-costs{margin:9px 0}
+@media(max-width:950px){.upgrade-layout{grid-template-columns:1fr}.upgrade-result{min-width:0}.upgrade-controls .species-popup{max-width:100%}}
+@media(max-width:650px){.upgrade-entry{gap:7px;margin-bottom:10px}.upgrade-entry .button{width:100%;font-size:12px}.upgrade-entry>.small-note{display:none}.upgrade-layout{gap:10px}.upgrade-controls .form-grid{gap:6px}.upgrade-shortcuts{margin:8px 0}.upgrade-identity{margin:6px 0 10px}.upgrade-costs{padding:9px;gap:6px;margin:10px 0}.upgrade-costs strong{font-size:19px}.upgrade-costs small{font-size:10px}.upgrade-stats{font-size:12px}.upgrade-stats th,.upgrade-stats td{padding:7px 4px}.upgrade-stats thead th{font-size:10px}.upgrade-budget .form-grid{grid-template-columns:1fr 1fr}.upgrade-budget .form-grid>label:first-child{grid-column:1/-1}.upgrade-traits .iv-grid label{font-size:9px}.upgrade-status{font-size:11px}.upgrade-toolbar{margin-bottom:6px}.upgrade-sources{width:100%}.upgrade-sources button{flex:1}.upgrade-intro{font-size:11px}.upgrade-result .section-head h2{font-size:22px}.raid-pass-info{font-size:11px}}

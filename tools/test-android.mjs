@@ -5,6 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const serial=process.argv[2];
+const screenshots=process.argv.includes('--screenshots');
 if(!/^emulator-\d+$/.test(serial||''))throw Error('Pass the serial of a disposable Android emulator, e.g. emulator-5554. Physical phones are not accepted.');
 const sdk=process.env.ANDROID_SDK_ROOT||process.env.ANDROID_HOME||(process.platform==='win32'?path.join(process.env.LOCALAPPDATA||path.join(os.homedir(),'AppData/Local'),'Android/Sdk'):process.platform==='darwin'?path.join(os.homedir(),'Library/Android/sdk'):path.join(os.homedir(),'Android/Sdk'));
 const adb=path.join(sdk,'platform-tools',process.platform==='win32'?'adb.exe':'adb');
@@ -14,7 +15,8 @@ const apk=path.join(root,'dist',`mifolab-${version}-debug.apk`);
 if(!fs.existsSync(apk))throw Error('Build a debug APK first: npm run build:android');
 const state=run(['get-state']).trim();if(state!=='device')throw Error('The specified emulator is not ready');
 console.log(run(['install','-r',apk]));
-const report=run(['shell','am','instrument','-w','-r','ru.mifolab.android/ru.mifolab.android.CoreTestRunner']);
+const report=run(['shell','am','instrument',...screenshots?['-e','screenshots','true']:[],'-w','-r','ru.mifolab.android/ru.mifolab.android.CoreTestRunner']);
 console.log(report);fs.writeFileSync(path.join(root,'dist/android-tests.txt'),report);
-if(!report.includes('assertions passed')||!report.includes('INSTRUMENTATION_CODE: -1'))throw Error('Android checks failed');
+if(!report.includes('assertions passed')||!report.includes('INSTRUMENTATION_CODE: -1')){try{fs.writeFileSync(path.join(root,'dist/android-failure.png'),run(['exec-out','run-as','ru.mifolab.android','cat','files/mifolab-failure.png'],null));}catch{}throw Error('Android checks failed');}
 fs.writeFileSync(path.join(root,'dist/android-screen.png'),run(['exec-out','run-as','ru.mifolab.android','cat','files/mifolab-phone.png'],null));
+if(screenshots)for(const name of ['upgrade-catalog','upgrade-result','upgrade-owned','arena','raids','collection'])fs.writeFileSync(path.join(root,'dist',name+'.png'),run(['exec-out','run-as','ru.mifolab.android','cat','files/layout-'+name+'.png'],null));

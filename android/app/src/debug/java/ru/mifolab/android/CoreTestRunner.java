@@ -44,6 +44,7 @@ public final class CoreTestRunner extends Instrumentation {
         check(js("document.querySelectorAll('input[type=file],#import-button,#export-button,#export-ranking,.mobile-file-tools,.mobile-import-file').length===0").equals("true"),"file transfer controls removed");
         check(js("!/наблюдател|pvpoke|покемон|импорт|экспорт|JSON/i.test(document.body.textContent)").equals("true"),"public interface has no internal references");
         check(js("document.querySelector('#mobile-connect-form').hidden").equals("false"),"login optional initially");check(js("document.documentElement.scrollWidth<=window.innerWidth+1").equals("true"),"no page horizontal overflow");
+        verifyPlannerCatalog();
         captureLayout("arena");
         if(screenshots){search("#species-search-b","гор");captureLayout("search-b");js("document.activeElement.blur();document.querySelector('#team-a details').open=true");captureLayout("arena-details");js("document.querySelector('#team-a details').open=false");}
         page("battle");search("#species-search-a","№ 006");check(js("document.querySelectorAll('#species-search-a-list .species-option').length===1&&document.querySelector('#species-search-a-list').textContent.includes('Рарог')").equals("true"),"arena search by chronicle number");click("#species-search-a-list .species-option");
@@ -60,6 +61,7 @@ public final class CoreTestRunner extends Instrumentation {
         check(TestActivity.claims==1&&TestActivity.reads==0,"sign-in does not fetch yard");click("#mobile-refresh");
         until("window.MifoOwned.get()?.spirits.length===9&&!document.querySelector('.mobile-connected').hidden","manual fetch directly populates collection");
         check(TestActivity.claims==1&&TestActivity.reads==1,"only claim and GET yard called");
+        verifyPlannerYard();
         captureLayout("collection");
         check(js("window.MifoOwned.get().format==='mifolab-collection'&&window.MifoOwned.get().updatedAt>0").equals("true"),"current collection format");check(js("window.MifoOwned.get().spirits[1].stats.sila===172").equals("true"),"exact caught stats");check(js("window.MifoOwned.get().unavailable.length===1").equals("true"),"unknown record disclosed");
         check(!js("JSON.stringify(localStorage)").contains(TestActivity.TEST_TOKEN),"token never reaches web storage");check(!js("JSON.stringify(window.MifoOwned.get())").contains("PRIVATE-SENTINEL"),"account fields stripped");check(js("document.querySelector('#mobile-code').value==='' ").equals("true"),"code field cleared");
@@ -77,12 +79,51 @@ public final class CoreTestRunner extends Instrumentation {
         page("raids");Thread.sleep(400);Bitmap screenshot=getUiAutomation().takeScreenshot();check(screenshot!=null,"Android screenshot captured");try(FileOutputStream out=context.openFileOutput("mifolab-phone.png",0)){screenshot.compress(Bitmap.CompressFormat.PNG,100,out);}screenshot.recycle();
         int nextLoad=activity.documentLoads+1;runOnMainSync(()->activity.webView.reload());awaitDocument(nextLoad);until("!!window.MifoAndroid&&window.MifoOwned.get()?.spirits.length===9","collection survives reload");
         Thread.sleep(300);check(TestActivity.reads==2,"reopening never fetches yard");
+        check(js("MifoOwned.get().resources.dust===50000&&MifoOwned.get().resources.sparks.rarog===30").equals("true"),"upgrade resources persist offline after reload");
         page("collection");click("#mobile-disconnect");until("window.MifoOwned.get()?.spirits.length===9&&!document.querySelector('#mobile-connect-form').hidden","logout keeps offline collection");check(SecureSession.get(context).isEmpty(),"logged out natively");
         check(js("!/наблюдател|pvpoke|покемон|импорт|экспорт|JSON/i.test(document.body.textContent)").equals("true"),"loaded collection and results use public copy");
         noPrivateLabels();
         check(activity.testConsoleErrors.isEmpty(),"no WebView JS errors");
     }
     private void awaitDocument(int count) throws Exception {long end=SystemClock.uptimeMillis()+30000;while(SystemClock.uptimeMillis()<end&&activity.documentLoads<count)Thread.sleep(100);check(activity.documentLoads>=count,"local document finished loading");}
+    private void enter(String selector,String value) throws Exception {js("(()=>{const e=document.querySelector("+JSONObject.quote(selector)+");e.value="+JSONObject.quote(value)+";e.dispatchEvent(new Event('input',{bubbles:true}));})()");}
+    private void verifyPlannerCatalog() throws Exception {
+        js("window.__arenaBeforePlanner=JSON.stringify(MifoArena.teams())");page("rankings");click("#open-upgrade-catalog");
+        until("document.querySelector('#page-upgrade').classList.contains('active')","planner is available from the ranking");
+        check(js("document.querySelector('#upgrade-cost-dust').textContent.replace(/\\D/g,'')==='127000'&&document.querySelector('#upgrade-cost-sparks').textContent==='109'").equals("true"),"level 20 to 40 shows verified game costs");
+        search("#species-search-upgrade","№007");click("#species-search-upgrade-list .species-option");
+        check(js("document.querySelector('#upgrade-picker select').value==='indrik'").equals("true"),"planner searches the chronicle by number");
+        js("document.querySelector('#upgrade-budget').open=true");enter("#upgrade-player","20");enter("#upgrade-dust","6500");enter("#upgrade-sparks","5");click("#upgrade-max");
+        check(js("document.querySelector('#upgrade-target').value==='22'&&document.querySelector('#upgrade-cost-dust').textContent.replace(/\\D/g,'')==='6500'").equals("true"),"maximum upgrade follows exact resource and player cap");
+        enter("#upgrade-target","23");check(js("document.querySelector('#upgrade-status').textContent.includes('нужен игрок уровня 21')&&document.querySelector('#upgrade-status').textContent.includes('Не хватает')").equals("true"),"planner explains resource shortage and required player level");
+        enter("#upgrade-from","");check(js("!!document.querySelector('#upgrade-result .error')").equals("true"),"empty current level is reported");click("[data-upgrade-source=\"owned\"]");click("[data-upgrade-source=\"catalog\"]");
+        check(js("document.querySelector('#upgrade-from').value==='20'").equals("true"),"returning to catalog restores the last valid parameters");
+        enter("#upgrade-target","40");enter("#upgrade-player","40");enter("#upgrade-dust","127000");enter("#upgrade-sparks","109");
+        select("[data-upgrade-nature=\"up\"]","sila");
+        check(js("document.querySelector('#upgrade-result').textContent.includes('258')").equals("true"),"nature changes the future spirit stats");
+        check(js("JSON.stringify(MifoArena.teams())===window.__arenaBeforePlanner").equals("true"),"planning leaves arena teams unchanged");
+        check(TestActivity.reads==0&&TestActivity.claims==0,"planning from the chronicle is offline");noPrivateLabels();
+        captureLayout("upgrade-catalog");
+        if(screenshots){js("document.querySelector('#upgrade-result').scrollIntoView({block:'start'})");captureLayout("upgrade-result",false);}
+        page("elements");check(js("document.querySelector('#raid-pass-help').textContent.includes('200 монет')&&document.querySelector('#raid-pass-help').textContent.includes('до 3 за сутки')&&document.querySelector('#raid-pass-help').textContent.includes('не возвращает')").equals("true"),"raid pass reference includes price daily limit and lobby rule");
+        page("battle");
+    }
+    private void verifyPlannerYard() throws Exception {
+        check(js("MifoOwned.get().resources.playerXp===7253000&&MifoOwned.get().resources.dust===50000&&MifoOwned.get().resources.sparks.rarog===30&&MifoOwned.get().resources.sparks.unknown===undefined").equals("true"),"manual yard fetch provides only upgrade resource fields");
+        js("window.__yardBeforePlanner=JSON.stringify(MifoOwned.get())");click("[data-owned-upgrade=\"test-spirit-2\"]");
+        check(js("document.querySelector('#upgrade-from').value==='37'&&document.querySelector('#upgrade-from').readOnly").equals("true"),"caught copy keeps its actual initial level");
+        if(!js("document.querySelector('#upgrade-use-yard').checked").equals("true"))click("#upgrade-use-yard");
+        check(js("document.querySelector('#upgrade-dust').value==='50000'&&document.querySelector('#upgrade-sparks').value==='30'&&document.querySelector('#upgrade-dust').readOnly").equals("true"),"planner reads the cached account budget");
+        click("#upgrade-max");check(js("document.querySelector('#upgrade-target').value==='40'&&document.querySelector('#upgrade-cost-dust').textContent.replace(/\\D/g,'')==='29100'").equals("true"),"caught upgrade to 40 uses current level and resources");
+        js("document.querySelector('#upgrade-budget').open=false");captureLayout("upgrade-owned");
+        search("#species-search-upgrade","006");check(js("document.querySelectorAll('#species-search-upgrade-list .species-option').length===2").equals("true"),"chronicle search preserves both caught copies in planner");click("#species-search-upgrade-list .species-option:nth-child(2)");
+        check(js("document.querySelector('#upgrade-from').value==='16'").equals("true"),"second caught copy has its own actual level");
+        check(js("JSON.stringify(MifoOwned.get())===window.__yardBeforePlanner").equals("true"),"planner does not spend resources or rewrite caught stats");
+        click("#upgrade-back");click("[data-owned-upgrade=\"test-spirit-1\"]");check(js("document.querySelector('#upgrade-status').textContent.includes('в охране')").equals("true"),"guard restriction is visible");
+        js("window.__freshYard=JSON.parse(window.__yardBeforePlanner);const old=JSON.parse(window.__yardBeforePlanner);delete old.resources;MifoOwned.load(old,{calculateNow:false})");
+        check(js("document.querySelector('#upgrade-use-yard').disabled&&document.querySelector('#upgrade-budget-note').textContent.includes('нет запасов')").equals("true"),"older offline yard stays usable without resource data");
+        js("MifoOwned.load(window.__freshYard,{calculateNow:false})");noPrivateLabels();check(TestActivity.reads==1,"opening and editing the planner never fetches the yard");click("#upgrade-back");
+    }
     private void captureLayout(String name) throws Exception {captureLayout(name,true);}
     private void captureLayout(String name,boolean top) throws Exception {
         if(!screenshots)return;

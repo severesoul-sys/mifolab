@@ -8,10 +8,13 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="raids.css">
   <link rel="stylesheet" href="icons.css">
+  <link rel="stylesheet" href="upgrade.css">
   <script defer src="catalog.js"></script>
   <script defer src="chronicle-data.js"></script>
   <script defer src="spirit-search.js"></script>
   <script defer src="core.js"></script>
+  <script defer src="upgrade-data.js"></script>
+  <script defer src="upgrade-core.js"></script>
   <script defer src="rankings.js"></script>
   <script defer src="species-picker.js"></script>
   <script defer src="collection-core.js"></script>
@@ -20,6 +23,7 @@
   <script defer src="app.js"></script>
   <script defer src="collection-ui.js"></script>
   <script defer src="raid-ui.js"></script>
+  <script defer src="upgrade-ui.js"></script>
 </head>
 <body>
   <aside class="sidebar">
@@ -51,6 +55,7 @@
       <section id="series-result" class="card result-card" hidden aria-live="polite"></section>
     </section>
     <section id="page-raids" class="page" aria-label="Рейды на боссов"></section>
+    <section id="page-upgrade" class="page" aria-label="Планировщик усиления духов"></section>
     <section id="page-collection" class="page" aria-label="Мои духи из игры">
       <section class="card desktop-collection-info"><h2>Подворье из игры</h2><p>Получить своих духов можно в приложении Mifo Lab для Android: подключите аккаунт по коду и нажмите «Получить духов из подворья».</p><p class="small-note">Ранее полученный список доступен для расчётов офлайн.</p></section>
       <p id="owned-message" class="notice" role="status" hidden></p>

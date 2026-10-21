@@ -6,11 +6,12 @@
   // using the same change handler. Typing alone never changes the team.
   window.MifoSpeciesPicker=function(select){
     const side=select.dataset.side,id='species-search-'+side,label=select.getAttribute('aria-label');
-    const groupLabel=side==='raid'?'Духи для рейда':'Духи команды '+side.toUpperCase();
-    const showLabel=side==='raid'?'Показать всех духов для рейда':'Показать всех духов команды '+side.toUpperCase();
+    const groupLabel=select.dataset.groupLabel||(side==='raid'?'Духи для рейда':'Духи команды '+side.toUpperCase());
+    const showLabel=select.dataset.showLabel||(side==='raid'?'Показать всех духов для рейда':'Показать всех духов команды '+side.toUpperCase());
     const entries=Array.from(select.options,option=>{
       const [name,...detail]=option.textContent.split(' · ');
-      return {value:option.value,name,detail:[S.label(option.value),...detail].filter(Boolean).join(' · ')};
+      const speciesId=option.dataset.species||option.value;
+      return {value:option.value,speciesId,name,detail:[S.label(speciesId),...detail].filter(Boolean).join(' · ')};
     }).sort((a,b)=>a.name.localeCompare(b.name,'ru'));
     const root=document.createElement('div');
     root.className='species-picker searchable-picker';
@@ -44,7 +45,7 @@
     function open(query=''){
       if(input.disabled)return;
       const searched=String(query).trim().length>0;
-      matches=entries.filter(entry=>entry.value?S.matches(query,entry.value,entry.name):!searched);
+      matches=entries.filter(entry=>entry.value?S.matches(query,entry.speciesId,entry.name):!searched);
       list.replaceChildren();
       matches.forEach((entry,index)=>{
         const option=document.createElement('button');

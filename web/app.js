@@ -21,13 +21,14 @@
   function playing(side){return team(side).slice(0,state.size);}
   function config(side){return team(side)[selected[side]];}
   function setTab(name){
-    if(!['battle','rankings','collection','raids','training','elements'].includes(name))name='battle';
+    if(!['battle','rankings','collection','raids','training','elements','upgrade'].includes(name))name='battle';
     if(live&&name!=='battle')stopLive();
     document.querySelectorAll('.page').forEach(page=>page.classList.toggle('active',page.id==='page-'+name));
-    document.querySelectorAll('.nav-item').forEach(button=>button.classList.toggle('active',button.dataset.tab===name));
+    document.querySelectorAll('.nav-item').forEach(button=>button.classList.toggle('active',button.dataset.tab===(name==='upgrade'?'rankings':name)));
     const titles={battle:['Арена духов','Соберите отряды. Проверьте исход. Найдите своё преимущество.'],rankings:['Рейтинг духов','Круговой турнир и мощь каждого вида — в одной таблице.'],training:['Мастерская рун','Четыре узора из игры. Один росчерк, который меняет бой.'],elements:['Стихии и отряд','Посмотрите, кого ваши духи бьют сильнее и где им нужна поддержка.']};
     titles.collection=['Мои духи из игры','Сравните пойманных духов. Найдите сильнейших. Соберите свою команду.'];
     titles.raids=['Рейды на боссов','Выберите противника. Подготовьте отряды. Рассчитайте общий вклад.'];
+    titles.upgrade=['Усиление духов','Рассчитайте затраты и сравните характеристики до и после усиления.'];
     $('#page-title').textContent=titles[name][0];$('#page-description').textContent=titles[name][1];
     if(location.hash!=='#'+name)history.replaceState(null,'','#'+name);
     if(name==='elements')renderCoverage();
@@ -162,6 +163,7 @@
     if(!ranking)return;const index=ranking.rows.findIndex(row=>row.id===id),row=ranking.rows[index];
     const matches=ranking.rows.map((enemy,enemyIndex)=>({enemy,rate:ranking.matrix[index][enemyIndex]})).filter(item=>item.rate!=null).sort((left,right)=>right.rate-left.rate);
     $('#rank-detail').hidden=false;$('#rank-detail').innerHTML=`<div class="section-head"><div><div class="eyebrow">ЛИЧНЫЕ ПРОТИВОСТОЯНИЯ</div><h2>${escape(row.name)}</h2><small>${S.label(row.id)}</small></div><span class="pill">Рейтинг № ${row.rank}</span></div><p class="small-note">Доля очков против конкретного вида при условиях текущего рейтинга. Нажмите имя соперника, чтобы перенести эту пару на арену.</p><div class="matchup-columns"><div><h3>Лучшие противостояния</h3>${matches.slice(0,8).map(item=>matchupHtml(id,item)).join('')}</div><div><h3>Самые трудные соперники</h3>${matches.slice(-8).reverse().map(item=>matchupHtml(id,item)).join('')}</div></div><div class="detail-actions"><button class="button primary" data-add-hero="${id}">Выбрать для стороны A →</button><button class="button quiet" id="close-matchups">Свернуть</button></div>`;
+    if(S.number(id)!=null)$('#rank-detail .detail-actions').insertAdjacentHTML('afterbegin',`<button class="button secondary" data-upgrade-species="${escape(id)}">План усиления →</button>`);
     $('#rank-detail').scrollIntoView({behavior:'smooth',block:'start'});
   }
   function matchupHtml(id,item){return `<div class="matchup-item"><button data-matchup="${id}:${item.enemy.id}">${escape(item.enemy.name)}</button><b>${percent(item.rate)}</b></div>`;}

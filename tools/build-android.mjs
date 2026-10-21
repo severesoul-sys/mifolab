@@ -36,7 +36,7 @@ if(mode==='release'){
 const build=path.join(root,'.build',new Date().toISOString().replace(/[:.]/g,'-'));
 for(const name of ['gen','classes','dex','assets/web'])mkdir(path.join(build,name));
 const platform=path.join(build,'android.jar');fs.copyFileSync(path.join(sdk,'platforms',platformVersion,'android.jar'),platform);
-const assets=['index.html','styles.css','raids.css','icons.css','icon-raids.png','icon-yard.svg','catalog.js','chronicle-data.js','spirit-search.js','core.js','rankings.js','species-picker.js','collection-core.js','collection-ui.js','collection-worker.js','raid-data.js','raid-core.js','raid-ui.js','raid-worker.js','rank-worker.js','app.js'];
+const assets=['index.html','styles.css','raids.css','icons.css','upgrade.css','icon-raids.png','icon-yard.svg','catalog.js','chronicle-data.js','spirit-search.js','core.js','upgrade-data.js','upgrade-core.js','upgrade-ui.js','rankings.js','species-picker.js','collection-core.js','collection-ui.js','collection-worker.js','raid-data.js','raid-core.js','raid-ui.js','raid-worker.js','rank-worker.js','app.js'];
 for(const name of assets)fs.copyFileSync(path.join(web,name),path.join(build,'assets/web',name));
 for(const name of ['native-app.js','mobile.css','compact.css'])fs.copyFileSync(path.join(android,'web',name),path.join(build,'assets/web',name));
 const indexPath=path.join(build,'assets/web/index.html');

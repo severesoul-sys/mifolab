@@ -34,7 +34,7 @@ final class AccountController implements AutoCloseable {
         JSONObject save=response.optJSONObject("save");if(save==null)throw new IOException("Сервер не передал подворье");
         BattleData.Catalog catalog=BattleData.load(context);BattleData.Parsed parsed=BattleData.parse(save.optJSONArray("spirits"),catalog,BattleData.buddy(save),now,false);
         if(parsed.total>2000)throw new IOException("В подворье больше поддерживаемых 2000 духов");
-        return CollectionSnapshot.create(parsed,catalog,now);
+        return CollectionSnapshot.create(parsed,catalog,now,save);
     }
     private final Context context;private final Transport transport;private final Listener listener;
     private final ExecutorService executor=Executors.newSingleThreadExecutor();

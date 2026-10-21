@@ -2,9 +2,9 @@ package ru.mifolab.android;
 
 import org.json.*;
 
-/** The application passes only spirit parameters to its simulator. */
+/** Spirit parameters and upgrade budgets, without account identifiers. */
 final class CollectionSnapshot {
-    static JSONObject create(BattleData.Parsed parsed,BattleData.Catalog catalog,long now) throws JSONException {
+    static JSONObject create(BattleData.Parsed parsed,BattleData.Catalog catalog,long now,JSONObject save) throws JSONException {
         JSONObject result=new JSONObject().put("format","mifolab-collection").put("version",1).put("updatedAt",now)
             .put("gameVersion",catalog.version).put("total",parsed.total);
         JSONArray rows=new JSONArray();
@@ -23,7 +23,21 @@ final class CollectionSnapshot {
         for(String reason:parsed.unavailable){String value=reason.toLowerCase(java.util.Locale.ROOT);
             issues.put(value.contains("вид отсутствует")?"Вид этого духа пока отсутствует в каталоге.":value.contains("повтор")?"Повторяющаяся запись в подворье. Обновите список духов.":"Не удалось получить все характеристики духа. Обновите подворье.");
         }
-        return result.put("spirits",rows).put("unavailable",issues);
+        return result.put("spirits",rows).put("unavailable",issues).put("resources",resources(save,catalog));
+    }
+    static JSONObject resources(JSONObject save,BattleData.Catalog catalog) throws JSONException {
+        JSONObject items=save.optJSONObject("items"),source=save.optJSONObject("sparks");
+        JSONObject result=new JSONObject().put("playerXp",count(save.opt("xp")))
+            .put("dust",items==null?JSONObject.NULL:count(items.has("dust")?items.opt("dust"):0));
+        if(source==null)return result.put("sparks",JSONObject.NULL);
+        JSONObject sparks=new JSONObject();
+        for(String species:catalog.rows.keySet())sparks.put(species,count(source.has(species)?source.opt(species):0));
+        return result.put("sparks",sparks);
+    }
+    private static Object count(Object value){
+        if(!(value instanceof Number))return JSONObject.NULL;
+        double number=((Number)value).doubleValue();
+        return Double.isFinite(number)&&number>=0&&number<=9007199254740991d&&number==Math.rint(number)?((Number)value).longValue():JSONObject.NULL;
     }
     private static JSONObject stats(int[] values) throws JSONException {
         JSONObject result=new JSONObject();for(int index=0;index<BattleData.STATS.length;index++)result.put(BattleData.STATS[index],values[index]);return result;

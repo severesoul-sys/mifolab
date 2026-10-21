@@ -8,6 +8,15 @@
   function text(value,label,max=200){if(typeof value!=='string'||!value.trim()||value.length>max)throw new Error('Неверный параметр: '+label);return value;}
   function stats(value,min,max,label){const out={};for(const key of C.STATS)out[key]=num(value?.[key],min,max,label+' '+C.STAT_NAMES[C.STATS.indexOf(key)],true);return out;}
   function flag(value,label){if(value!=null&&typeof value!=='boolean')throw new Error('Неверный флаг: '+label);return value===true;}
+  function resources(input,catalog){
+    if(!input||typeof input!=='object'||Array.isArray(input))return null;
+    const count=value=>Number.isSafeInteger(value)&&value>=0?value:null;
+    const result={playerXp:count(input.playerXp),dust:count(input.dust),sparks:null};
+    if(input.sparks&&typeof input.sparks==='object'&&!Array.isArray(input.sparks)){
+      result.sparks={};for(const species of catalog.species)result.sparks[species.id]=Object.prototype.hasOwnProperty.call(input.sparks,species.id)?count(input.sparks[species.id]):0;
+    }
+    return result;
+  }
   function parse(input,catalog){
     let data=input;
     if(typeof input==='string'){if(input.length>12*1024*1024)throw new Error('Данные подворья слишком большие');try{data=JSON.parse(input.replace(/^\uFEFF/,''));}catch{throw new Error('Не удалось прочитать подворье. Получите духов заново.');}}
@@ -34,9 +43,9 @@
       C.fighter(toConfig(row,false),catalog);spirits.push(row);
     }
     const gameVersion=text(data.gameVersion,'версия игры',50);
-    if(gameVersion!==catalog.version&&!['0.37','0.42'].every(version=>[gameVersion,catalog.version].includes(version)))warnings.push('Подворье получено для другой версии игры. Прогноз боя может отличаться.');
+    if(gameVersion!==catalog.version&&![gameVersion,catalog.version].every(version=>['0.37','0.42','0.44'].includes(version)))warnings.push('Подворье получено для другой версии игры. Прогноз боя может отличаться.');
     if(unavailable.length)warnings.push(`Не участвуют в боях: ${unavailable.length}. Причины показаны ниже.`);
-    return {format:FORMAT,version:1,updatedAt:num(data.updatedAt??data.exportedAt,1,8640000000000000,'дата обновления',true),gameVersion,total,spirits,unavailable,warnings};
+    return {format:FORMAT,version:1,updatedAt:num(data.updatedAt??data.exportedAt,1,8640000000000000,'дата обновления',true),gameVersion,total,spirits,unavailable,warnings,resources:resources(data.resources,catalog)};
   }
   function toConfig(row,healed=true){return {speciesId:row.speciesId,level:row.level,iv:{...row.iv},nature:{...row.nature},health:healed?100:row.health,cheer:100,manualStats:{...row.stats},baseStatsOverride:{...row.baseStats},elementsOverride:[...row.elements],instanceId:row.id,displayName:row.name,source:'game',snapshotStats:true,shiny:row.shiny};}
   function options(input={}){

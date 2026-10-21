@@ -1,6 +1,6 @@
 {
   "name": "mifozov-battle-lab",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "private": true,
   "scripts": {
     "start": "node server.mjs",

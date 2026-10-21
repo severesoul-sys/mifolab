@@ -3,12 +3,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 const root=path.dirname(fileURLToPath(import.meta.url));
+const version=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8')).version;
 const port=Number(process.env.MIFO_SIM_PORT||8765);
 const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.csv':'text/csv; charset=utf-8'};
 const server=http.createServer((request,response)=>{
   if(request.method!=='GET'&&request.method!=='HEAD'){response.writeHead(405);response.end();return;}
   let name;try{name=decodeURIComponent(new URL(request.url,'http://localhost').pathname);}catch{response.writeHead(400);response.end();return;}
-  if(name==='/health'){response.writeHead(200,{'Content-Type':'application/json'});response.end(JSON.stringify({app:'mifozov-battle-lab'}));return;}
+  if(name==='/health'){response.writeHead(200,{'Content-Type':'application/json'});response.end(JSON.stringify({app:'mifozov-battle-lab',version}));return;}
   const target=path.resolve(root,'.'+(name==='/'?'/index.html':name));
   if(!target.startsWith(root+path.sep)||name.includes('..')||!['.html','.js','.css','.json','.svg','.png','.csv'].includes(path.extname(target))){response.writeHead(404);response.end();return;}
   fs.stat(target,(error,stat)=>{
