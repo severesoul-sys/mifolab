@@ -1,7 +1,8 @@
+// Generated from the reviewed public client by tools/extract-046.cjs.
 (function(root){const data={
-  "version": "0.44",
-  "source": "https://mifozov.com/assets/index-DYBdSEdw.js",
-  "sha256": "58a4c4c0aac1497cc201e13e650bafd27915a8788100e549755ce27e97d2dd2c",
+  "version": "0.46",
+  "source": "https://mifozov.com/assets/index-CwPus7qr.js",
+  "sha256": "b4842122568b98bf39a45b155b97a1a2a57a6a44bd4aa7d948f6deab5f205a2d",
   "maxSpiritLevel": 40,
   "maxPlayerLevel": 50,
   "spiritLevelAbovePlayer": 2,
@@ -144,4 +145,4 @@
     "price": 200,
     "perDay": 3
   }
-};if(typeof module!=="undefined"&&module.exports)module.exports=data;root.MifoUpgradeData=data;})(typeof globalThis!=="undefined"?globalThis:this);
+};if(typeof module!=='undefined'&&module.exports)module.exports=data;root.MifoUpgradeData=data;})(typeof globalThis!=='undefined'?globalThis:this);

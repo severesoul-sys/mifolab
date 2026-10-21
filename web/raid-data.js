@@ -1,10 +1,10 @@
-// Extracted from the public Mifozov client; see tools/extract-raids.cjs.
+// Generated from the reviewed public client by tools/extract-046.cjs.
 (function(root){const data={
-  "version": "0.42",
-  "source": "https://mifozov.com/assets/index-C15W6ar6.js",
+  "version": "0.46",
+  "source": "https://mifozov.com/assets/index-CwPus7qr.js",
+  "sha256": "b4842122568b98bf39a45b155b97a1a2a57a6a44bd4aa7d948f6deab5f205a2d",
   "guide": "https://mifozov.com/players#bosses",
-  "checkedAt": "2026-10-20",
-  "sha256": "f0f1dca51fbc5167a3a72a598b471bb47a9e094bf750ff7a1c8d2397988024cd",
+  "checkedAt": "2026-10-21",
   "rules": {
     "windows": [
       8,
@@ -57,6 +57,7 @@
     "maxPlayers": 6,
     "fightSec": 180,
     "catchMin": 15,
+    "passFromOak": 1,
     "catchBase": [
       0.35,
       0.3,
@@ -119,6 +120,39 @@
     "faintPickMs": 10000,
     "healMinutes": 60
   },
+  "brew": {
+    "recipes": {
+      "potion_dead": {
+        "herbs": {
+          "calamus": 2,
+          "wormwood": 1
+        },
+        "minutes": 5,
+        "out": 3
+      },
+      "potion_live": {
+        "herbs": {
+          "calamus": 2,
+          "st_johns_wort": 1,
+          "thyme": 1
+        },
+        "minutes": 30,
+        "out": 1
+      },
+      "potion_sila": {
+        "herbs": {
+          "st_johns_wort": 2,
+          "thyme": 2,
+          "wormwood": 1
+        },
+        "minutes": 60,
+        "out": 1
+      }
+    },
+    "liveHp": 0.5,
+    "livePerFight": 2,
+    "silaBuff": 0.1
+  },
   "retired": [
     "izbushka",
     "mora",
@@ -132,10 +166,9 @@
     "medunitsa"
   ],
   "catalog": {
-    "version": "0.42",
-    "excluded": [
-      "izbushka"
-    ],
+    "version": "0.46",
+    "source": "https://mifozov.com/assets/index-CwPus7qr.js",
+    "sha256": "b4842122568b98bf39a45b155b97a1a2a57a6a44bd4aa7d948f6deab5f205a2d",
     "species": [
       {
         "id": "ogonyok",
@@ -1666,7 +1699,764 @@
           "pryt": 235,
           "duh": 310
         }
+      },
+      {
+        "id": "chudo_yudo",
+        "name": "Чудо-юдо",
+        "rarity": "legendary",
+        "elements": [
+          "ogon",
+          "nav"
+        ],
+        "base": {
+          "zhivitsa": 215,
+          "sila": 285,
+          "stoikost": 205,
+          "pryt": 205,
+          "duh": 155
+        }
+      },
+      {
+        "id": "zilant",
+        "name": "Зилант",
+        "rarity": "rare",
+        "elements": [
+          "ogon",
+          "veter"
+        ],
+        "base": {
+          "zhivitsa": 155,
+          "sila": 210,
+          "stoikost": 150,
+          "pryt": 150,
+          "duh": 110
+        }
+      },
+      {
+        "id": "sery_volk",
+        "name": "Серый Волк",
+        "rarity": "rare",
+        "elements": [
+          "drevo"
+        ],
+        "base": {
+          "zhivitsa": 145,
+          "sila": 160,
+          "stoikost": 125,
+          "pryt": 220,
+          "duh": 145
+        }
+      },
+      {
+        "id": "ak_bars",
+        "name": "Ак Барс",
+        "rarity": "rare",
+        "elements": [
+          "veter"
+        ],
+        "base": {
+          "zhivitsa": 165,
+          "sila": 220,
+          "stoikost": 155,
+          "pryt": 155,
+          "duh": 120
+        }
+      },
+      {
+        "id": "tulpar",
+        "name": "Тулпар",
+        "rarity": "rare",
+        "elements": [
+          "veter"
+        ],
+        "base": {
+          "zhivitsa": 145,
+          "sila": 165,
+          "stoikost": 130,
+          "pryt": 230,
+          "duh": 145
+        }
+      },
+      {
+        "id": "medved_lipovaya",
+        "name": "Медведь — липовая нога",
+        "rarity": "uncommon",
+        "elements": [
+          "nav"
+        ],
+        "base": {
+          "zhivitsa": 120,
+          "sila": 160,
+          "stoikost": 115,
+          "pryt": 115,
+          "duh": 85
+        }
+      },
+      {
+        "id": "byk_kholoda",
+        "name": "Бык Холода",
+        "rarity": "legendary",
+        "elements": [
+          "nav",
+          "voda"
+        ],
+        "base": {
+          "zhivitsa": 285,
+          "sila": 190,
+          "stoikost": 270,
+          "pryt": 125,
+          "duh": 180
+        }
+      },
+      {
+        "id": "zemlyanaya_koshka",
+        "name": "Земляная кошка",
+        "rarity": "uncommon",
+        "elements": [
+          "zemlya",
+          "ogon"
+        ],
+        "base": {
+          "zhivitsa": 105,
+          "sila": 95,
+          "stoikost": 100,
+          "pryt": 125,
+          "duh": 165
+        }
+      },
+      {
+        "id": "amba",
+        "name": "Амба",
+        "rarity": "rare",
+        "elements": [
+          "drevo"
+        ],
+        "base": {
+          "zhivitsa": 160,
+          "sila": 215,
+          "stoikost": 155,
+          "pryt": 155,
+          "duh": 115
+        }
+      },
+      {
+        "id": "simargl",
+        "name": "Симаргл",
+        "rarity": "legendary",
+        "elements": [
+          "ogon",
+          "yav"
+        ],
+        "base": {
+          "zhivitsa": 190,
+          "sila": 170,
+          "stoikost": 180,
+          "pryt": 225,
+          "duh": 300
+        }
+      },
+      {
+        "id": "yashcher",
+        "name": "Ящер",
+        "rarity": "rare",
+        "elements": [
+          "voda",
+          "nav"
+        ],
+        "base": {
+          "zhivitsa": 215,
+          "sila": 145,
+          "stoikost": 210,
+          "pryt": 95,
+          "duh": 135
+        }
+      },
+      {
+        "id": "alenky_tsvetochek",
+        "name": "Аленький цветочек",
+        "rarity": "rare",
+        "elements": [
+          "drevo"
+        ],
+        "base": {
+          "zhivitsa": 140,
+          "sila": 125,
+          "stoikost": 130,
+          "pryt": 165,
+          "duh": 215
+        }
+      },
+      {
+        "id": "kamenny_tsvetok",
+        "name": "Каменный цветок",
+        "rarity": "rare",
+        "elements": [
+          "zemlya",
+          "drevo"
+        ],
+        "base": {
+          "zhivitsa": 210,
+          "sila": 140,
+          "stoikost": 205,
+          "pryt": 95,
+          "duh": 135
+        }
+      },
+      {
+        "id": "kotofey",
+        "name": "Кот-Котофей",
+        "rarity": "uncommon",
+        "elements": [
+          "drevo"
+        ],
+        "base": {
+          "zhivitsa": 125,
+          "sila": 125,
+          "stoikost": 125,
+          "pryt": 125,
+          "duh": 125
+        }
+      },
+      {
+        "id": "zolotaya_shchetinka",
+        "name": "Золотая щетинка",
+        "rarity": "uncommon",
+        "elements": [
+          "ogon"
+        ],
+        "base": {
+          "zhivitsa": 110,
+          "sila": 120,
+          "stoikost": 95,
+          "pryt": 170,
+          "duh": 110
+        }
+      },
+      {
+        "id": "aralez",
+        "name": "Аралез",
+        "rarity": "rare",
+        "elements": [
+          "yav"
+        ],
+        "base": {
+          "zhivitsa": 145,
+          "sila": 130,
+          "stoikost": 140,
+          "pryt": 170,
+          "duh": 230
+        }
+      },
+      {
+        "id": "snezhny_lev",
+        "name": "Снежный лев",
+        "rarity": "rare",
+        "elements": [
+          "yav",
+          "veter"
+        ],
+        "base": {
+          "zhivitsa": 165,
+          "sila": 220,
+          "stoikost": 160,
+          "pryt": 160,
+          "duh": 120
+        }
+      },
+      {
+        "id": "laska",
+        "name": "Ласка",
+        "rarity": "common",
+        "elements": [
+          "zemlya"
+        ],
+        "base": {
+          "zhivitsa": 90,
+          "sila": 100,
+          "stoikost": 80,
+          "pryt": 135,
+          "duh": 90
+        }
+      },
+      {
+        "id": "vodyanoy_byk",
+        "name": "Водяной бык",
+        "rarity": "uncommon",
+        "elements": [
+          "voda"
+        ],
+        "base": {
+          "zhivitsa": 165,
+          "sila": 110,
+          "stoikost": 160,
+          "pryt": 75,
+          "duh": 105
+        }
+      },
+      {
+        "id": "veselka",
+        "name": "Веселка",
+        "rarity": "uncommon",
+        "elements": [
+          "voda",
+          "yav"
+        ],
+        "base": {
+          "zhivitsa": 110,
+          "sila": 95,
+          "stoikost": 105,
+          "pryt": 130,
+          "duh": 170
+        }
+      },
+      {
+        "id": "enudr",
+        "name": "Енудр",
+        "rarity": "common",
+        "elements": [
+          "voda"
+        ],
+        "base": {
+          "zhivitsa": 85,
+          "sila": 90,
+          "stoikost": 75,
+          "pryt": 130,
+          "duh": 85
+        }
+      },
+      {
+        "id": "repun_kamuy",
+        "name": "Рэпун Камуй",
+        "rarity": "uncommon",
+        "elements": [
+          "voda"
+        ],
+        "base": {
+          "zhivitsa": 130,
+          "sila": 130,
+          "stoikost": 130,
+          "pryt": 130,
+          "duh": 130
+        }
+      },
+      {
+        "id": "akkorokamuy",
+        "name": "Аккорокамуй",
+        "rarity": "rare",
+        "elements": [
+          "voda"
+        ],
+        "base": {
+          "zhivitsa": 215,
+          "sila": 145,
+          "stoikost": 205,
+          "pryt": 95,
+          "duh": 135
+        }
+      },
+      {
+        "id": "rogataya_zmeya",
+        "name": "Рогатая змея",
+        "rarity": "uncommon",
+        "elements": [
+          "voda",
+          "yav"
+        ],
+        "base": {
+          "zhivitsa": 110,
+          "sila": 100,
+          "stoikost": 105,
+          "pryt": 130,
+          "duh": 170
+        }
+      },
+      {
+        "id": "volosatik",
+        "name": "Волосатик",
+        "rarity": "common",
+        "elements": [
+          "voda"
+        ],
+        "base": {
+          "zhivitsa": 85,
+          "sila": 95,
+          "stoikost": 75,
+          "pryt": 135,
+          "duh": 85
+        }
+      },
+      {
+        "id": "pardus",
+        "name": "Пардус",
+        "rarity": "uncommon",
+        "elements": [
+          "ogon"
+        ],
+        "base": {
+          "zhivitsa": 110,
+          "sila": 125,
+          "stoikost": 100,
+          "pryt": 170,
+          "duh": 110
+        }
+      },
+      {
+        "id": "skimen",
+        "name": "Скимен",
+        "rarity": "uncommon",
+        "elements": [
+          "ogon",
+          "yav"
+        ],
+        "base": {
+          "zhivitsa": 130,
+          "sila": 175,
+          "stoikost": 125,
+          "pryt": 125,
+          "duh": 95
+        }
+      },
+      {
+        "id": "balaur",
+        "name": "Балаур",
+        "rarity": "rare",
+        "elements": [
+          "ogon"
+        ],
+        "base": {
+          "zhivitsa": 155,
+          "sila": 210,
+          "stoikost": 150,
+          "pryt": 150,
+          "duh": 110
+        }
+      },
+      {
+        "id": "razryv_trava",
+        "name": "Разрыв-трава",
+        "rarity": "uncommon",
+        "elements": [
+          "drevo"
+        ],
+        "base": {
+          "zhivitsa": 110,
+          "sila": 95,
+          "stoikost": 100,
+          "pryt": 125,
+          "duh": 170
+        }
+      },
+      {
+        "id": "plakun_trava",
+        "name": "Плакун-трава",
+        "rarity": "uncommon",
+        "elements": [
+          "drevo",
+          "yav"
+        ],
+        "base": {
+          "zhivitsa": 105,
+          "sila": 95,
+          "stoikost": 100,
+          "pryt": 125,
+          "duh": 165
+        }
+      },
+      {
+        "id": "son_trava",
+        "name": "Сон-трава",
+        "rarity": "common",
+        "elements": [
+          "drevo",
+          "nav"
+        ],
+        "base": {
+          "zhivitsa": 85,
+          "sila": 75,
+          "stoikost": 80,
+          "pryt": 100,
+          "duh": 135
+        }
+      },
+      {
+        "id": "los_hiisi",
+        "name": "Лось Хийси",
+        "rarity": "uncommon",
+        "elements": [
+          "drevo",
+          "nav"
+        ],
+        "base": {
+          "zhivitsa": 110,
+          "sila": 125,
+          "stoikost": 100,
+          "pryt": 170,
+          "duh": 110
+        }
+      },
+      {
+        "id": "koza_dereza",
+        "name": "Коза-дереза",
+        "rarity": "common",
+        "elements": [
+          "zemlya"
+        ],
+        "base": {
+          "zhivitsa": 85,
+          "sila": 90,
+          "stoikost": 75,
+          "pryt": 130,
+          "duh": 85
+        }
+      },
+      {
+        "id": "zemlyanoy_olen",
+        "name": "Земляной олень",
+        "rarity": "legendary",
+        "elements": [
+          "zemlya",
+          "nav"
+        ],
+        "base": {
+          "zhivitsa": 305,
+          "sila": 200,
+          "stoikost": 290,
+          "pryt": 135,
+          "duh": 190
+        }
+      },
+      {
+        "id": "bukha_noyon",
+        "name": "Буха-нойон",
+        "rarity": "legendary",
+        "elements": [
+          "zemlya"
+        ],
+        "base": {
+          "zhivitsa": 225,
+          "sila": 300,
+          "stoikost": 215,
+          "pryt": 215,
+          "duh": 160
+        }
+      },
+      {
+        "id": "sin_kamen",
+        "name": "Синь-камень",
+        "rarity": "rare",
+        "elements": [
+          "zemlya",
+          "yav"
+        ],
+        "base": {
+          "zhivitsa": 210,
+          "sila": 140,
+          "stoikost": 205,
+          "pryt": 95,
+          "duh": 135
+        }
+      },
+      {
+        "id": "vedmin_krug",
+        "name": "Ведьмин круг",
+        "rarity": "common",
+        "elements": [
+          "zemlya",
+          "nav"
+        ],
+        "base": {
+          "zhivitsa": 85,
+          "sila": 75,
+          "stoikost": 80,
+          "pryt": 100,
+          "duh": 135
+        }
+      },
+      {
+        "id": "kamen_sledovik",
+        "name": "Камень-следовик",
+        "rarity": "common",
+        "elements": [
+          "zemlya"
+        ],
+        "base": {
+          "zhivitsa": 120,
+          "sila": 80,
+          "stoikost": 115,
+          "pryt": 55,
+          "duh": 75
+        }
+      },
+      {
+        "id": "kok_bori",
+        "name": "Кок-бори",
+        "rarity": "rare",
+        "elements": [
+          "veter"
+        ],
+        "base": {
+          "zhivitsa": 165,
+          "sila": 220,
+          "stoikost": 160,
+          "pryt": 160,
+          "duh": 120
+        }
+      },
+      {
+        "id": "nebesny_los",
+        "name": "Небесный лось",
+        "rarity": "legendary",
+        "elements": [
+          "veter",
+          "yav"
+        ],
+        "base": {
+          "zhivitsa": 190,
+          "sila": 210,
+          "stoikost": 170,
+          "pryt": 295,
+          "duh": 190
+        }
+      },
+      {
+        "id": "spolokh",
+        "name": "Сполох",
+        "rarity": "uncommon",
+        "elements": [
+          "veter",
+          "yav"
+        ],
+        "base": {
+          "zhivitsa": 110,
+          "sila": 100,
+          "stoikost": 105,
+          "pryt": 130,
+          "duh": 175
+        }
+      },
+      {
+        "id": "yarchuk",
+        "name": "Ярчук",
+        "rarity": "common",
+        "elements": [
+          "yav"
+        ],
+        "base": {
+          "zhivitsa": 100,
+          "sila": 130,
+          "stoikost": 95,
+          "pryt": 95,
+          "duh": 70
+        }
+      },
+      {
+        "id": "shakhapet",
+        "name": "Шахапет",
+        "rarity": "uncommon",
+        "elements": [
+          "yav",
+          "zemlya"
+        ],
+        "base": {
+          "zhivitsa": 125,
+          "sila": 125,
+          "stoikost": 125,
+          "pryt": 125,
+          "duh": 125
+        }
+      },
+      {
+        "id": "nebesny_medved",
+        "name": "Небесный медведь",
+        "rarity": "uncommon",
+        "elements": [
+          "yav"
+        ],
+        "base": {
+          "zhivitsa": 125,
+          "sila": 165,
+          "stoikost": 120,
+          "pryt": 120,
+          "duh": 90
+        }
+      },
+      {
+        "id": "lunny_zayats",
+        "name": "Лунный заяц",
+        "rarity": "uncommon",
+        "elements": [
+          "yav",
+          "nav"
+        ],
+        "base": {
+          "zhivitsa": 110,
+          "sila": 100,
+          "stoikost": 105,
+          "pryt": 130,
+          "duh": 175
+        }
+      },
+      {
+        "id": "korkodil",
+        "name": "Коркодил",
+        "rarity": "common",
+        "elements": [
+          "voda"
+        ],
+        "base": {
+          "zhivitsa": 95,
+          "sila": 130,
+          "stoikost": 90,
+          "pryt": 90,
+          "duh": 70
+        }
+      },
+      {
+        "id": "akhlut",
+        "name": "Акхлут",
+        "rarity": "rare",
+        "elements": [
+          "voda",
+          "nav"
+        ],
+        "base": {
+          "zhivitsa": 160,
+          "sila": 210,
+          "stoikost": 150,
+          "pryt": 150,
+          "duh": 115
+        }
+      },
+      {
+        "id": "myandash",
+        "name": "Мяндаш",
+        "rarity": "uncommon",
+        "elements": [
+          "veter"
+        ],
+        "base": {
+          "zhivitsa": 110,
+          "sila": 120,
+          "stoikost": 95,
+          "pryt": 170,
+          "duh": 110
+        }
       }
+    ],
+    "excluded": [
+      "izbushka"
+    ],
+    "retired": [
+      "izbushka",
+      "mora",
+      "ognevka",
+      "svetlyachok",
+      "tenetnik",
+      "ugolny_zhuk",
+      "uzh_tsar",
+      "zapechnik",
+      "bozhya_korovka",
+      "medunitsa"
     ]
   },
   "bosses": [

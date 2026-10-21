@@ -43,7 +43,7 @@
       C.fighter(toConfig(row,false),catalog);spirits.push(row);
     }
     const gameVersion=text(data.gameVersion,'версия игры',50);
-    if(gameVersion!==catalog.version&&![gameVersion,catalog.version].every(version=>['0.37','0.42','0.44'].includes(version)))warnings.push('Подворье получено для другой версии игры. Прогноз боя может отличаться.');
+    if(gameVersion!==catalog.version&&![gameVersion,catalog.version].every(version=>['0.37','0.42','0.44','0.45','0.46'].includes(version)))warnings.push('Подворье получено для другой версии игры. Прогноз боя может отличаться.');
     if(unavailable.length)warnings.push(`Не участвуют в боях: ${unavailable.length}. Причины показаны ниже.`);
     return {format:FORMAT,version:1,updatedAt:num(data.updatedAt??data.exportedAt,1,8640000000000000,'дата обновления',true),gameVersion,total,spirits,unavailable,warnings,resources:resources(data.resources,catalog)};
   }

@@ -123,7 +123,7 @@
   function series(left,right,catalog,options={},count=100){integer(count,1,10000,'Число поединков');const wins=[0,0];let draws=0,time=0;for(let index=0;index<count;index++){const result=simulate(left,right,catalog,{...options,seed:`${options.seed??'series'}:${index}`},false);if(result.winner==null)draws++;else wins[result.winner]++;time+=result.time;}return {wins,draws,count,averageSeconds:time/count/1000};}
   function* tournament(catalog,input={}){
     const options=settings(input),level=integer(input.level??40,1,40,'Уровень'),iv=integer(input.iv??15,0,15,'IV'),trials=integer(input.trials??32,1,128,'Повторы');
-    const species=catalog.species.filter(item=>!(catalog.excluded||[]).includes(item.id));
+    const species=catalog.species.filter(item=>!(catalog.excluded||[]).includes(item.id)&&!(catalog.retired||[]).includes(item.id));
     const configs=species.map(item=>defaultConfig(item.id,level,iv));
     const rows=species.map((item,index)=>({id:item.id,name:item.name,elements:item.elements,rarity:item.rarity,wins:0,losses:0,draws:0,asA:0,asB:0,matches:0,power:fighter(configs[index],catalog).power}));
     const matrix=Array.from({length:rows.length},()=>Array(rows.length).fill(null));let pairs=0;const total=rows.length*(rows.length-1)/2;

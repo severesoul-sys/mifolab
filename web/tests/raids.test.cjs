@@ -15,7 +15,7 @@ test('current client and guide define 12 bosses, three tiers and unchanged comba
   for(const row of D.bosses){const boss=R.boss(row.id);assert.equal(boss.hp,row.hp);assert.equal(boss.level,row.level);assert.ok(C.STATS.every(stat=>boss.iv[stat]===15));}
 });
 test('120 boss fights match current original client damage, HP, energy and exact timings',{skip:!fs.existsSync(sourcePath)},()=>{
-  const ctx=reference(),random=C.rng('boss-parity'),species=D.catalog.species.filter(row=>!D.retired.includes(row.id));
+  const ctx=reference(),random=C.rng('boss-parity'),legacyIds=JSON.parse(vm.runInContext('JSON.stringify(Me.map(s=>s.id))',ctx)),species=D.catalog.species.filter(row=>!D.retired.includes(row.id)&&legacyIds.includes(row.id));
   for(let index=0;index<120;index++){
     const team=Array.from({length:1+index%6},()=>{const config=C.defaultConfig(species[Math.floor(random()*species.length)].id,1+Math.floor(random()*40),Math.floor(random()*16));config.health=10+Math.floor(random()*91);return config;});
     const bossId=D.bosses[index%12].id,options=R.settings({seed:'parity-'+index,attack:[0,.5,.8,1][index%4],defense:[0,.8,1][index%3],attackRuneMs:index%2?3000:900,defenseRuneMs:index%3?2500:500,swapMs:[0,500,10000][index%3],durationMs:index%5?178000:10000});

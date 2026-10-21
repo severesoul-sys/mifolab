@@ -1,6 +1,6 @@
 {
   "name": "mifolab",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "Android and web battle simulator for Mifozov spirits",
   "engines": { "node": ">=20" },

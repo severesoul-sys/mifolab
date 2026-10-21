@@ -45,13 +45,14 @@ public final class CoreTestRunner extends Instrumentation {
         check(js("!/наблюдател|pvpoke|покемон|импорт|экспорт|JSON/i.test(document.body.textContent)").equals("true"),"public interface has no internal references");
         check(js("document.querySelector('#mobile-connect-form').hidden").equals("false"),"login optional initially");check(js("document.documentElement.scrollWidth<=window.innerWidth+1").equals("true"),"no page horizontal overflow");
         verifyPlannerCatalog();
+        verifyCurrentUpdate();
         captureLayout("arena");
         if(screenshots){search("#species-search-b","гор");captureLayout("search-b");js("document.activeElement.blur();document.querySelector('#team-a details').open=true");captureLayout("arena-details");js("document.querySelector('#team-a details').open=false");}
         page("battle");search("#species-search-a","№ 006");check(js("document.querySelectorAll('#species-search-a-list .species-option').length===1&&document.querySelector('#species-search-a-list').textContent.includes('Рарог')").equals("true"),"arena search by chronicle number");click("#species-search-a-list .species-option");
         click("[data-size=\"6\"]");click("#team-a [data-slot=\"5\"]");search("#species-search-a","007");click("#species-search-a-list .species-option");check(js("document.querySelector('#team-a .fighter-identity').textContent.includes('Индрик')").equals("true"),"sixth arena slot accepts numbered search");noPrivateLabels();
         click("#run-battle");until("!document.querySelector('#battle-result').hidden","offline arena battle");
         captureLayout("teams");
-        page("rankings");check(js("document.querySelectorAll('#ranking-body tr').length===99").equals("true"),"bundled spirit ranking");search("#rank-search","№007");check(js("document.querySelectorAll('#ranking-body tr').length===1&&document.querySelector('#ranking-body').textContent.includes('Индрик')").equals("true"),"ranking search by chronicle number");search("#rank-search","");
+        page("rankings");check(js("document.querySelectorAll('#ranking-body tr').length===138").equals("true"),"bundled spirit ranking");search("#rank-search","№007");check(js("document.querySelectorAll('#ranking-body tr').length===1&&document.querySelector('#ranking-body').textContent.includes('Индрик')").equals("true"),"ranking search by chronicle number");search("#rank-search","");
         captureLayout("rankings");
         page("elements");check(js("document.querySelectorAll('#type-table td').length>40").equals("true"),"element reference");
         captureLayout("elements");
@@ -86,6 +87,31 @@ public final class CoreTestRunner extends Instrumentation {
         check(activity.testConsoleErrors.isEmpty(),"no WebView JS errors");
     }
     private void awaitDocument(int count) throws Exception {long end=SystemClock.uptimeMillis()+30000;while(SystemClock.uptimeMillis()<end&&activity.documentLoads<count)Thread.sleep(100);check(activity.documentLoads>=count,"local document finished loading");}
+    private void verifyCurrentUpdate() throws Exception {
+        check(js("MifoCatalog.version==='0.46'&&MifoChronicle.entries.length===138&&MifoRankings.battles===604992").equals("true"),"current data and recalculated ranking bundled");
+        page("battle");search("#species-search-a","091");click("#species-search-a-list .species-option");check(js("MifoArena.teams().left[0].speciesId==='chudo_yudo'").equals("true"),"new spirit selected by number on arena");
+        search("#species-search-b","Мяндаш");click("#species-search-b-list .species-option");click("#run-battle");until("!document.querySelector('#battle-result').hidden","new spirits fight offline");
+        page("rankings");search("#rank-search","138");check(js("document.querySelectorAll('#ranking-body tr').length===1&&document.querySelector('#ranking-body').textContent.includes('Мяндаш')").equals("true"),"new chronicle number in ranking");search("#rank-search","");
+        js("MifoUpgradeUI.openCatalog('myandash')");check(js("document.querySelector('#upgrade-identity').textContent.includes('№138')&&document.querySelector('#upgrade-cost-dust').textContent.length>0").equals("true"),"new spirit in upgrade planner");
+        page("raids");search("#species-search-raid","091");click("#species-search-raid-list .species-option");
+        check(js("document.querySelector('.raid-spirit-title').textContent.includes('Чудо-юдо')").equals("true"),"new raid team spirit");
+        check(js("!document.querySelector('#raid-sila-potion').checked&&document.querySelector('#raid-revives').value==='0'").equals("true"),"potions default off for old saved conditions");
+        click("#raid-sila-potion");select("#raid-revives","2");click("#raid-run");until("!document.querySelector('#raid-result').hidden","raid potions run offline");
+        check(js("document.querySelector('#raid-result').textContent.includes('из 2')&&document.querySelector('#raid-result').textContent.includes('Отвар силы: у всех')").equals("true"),"potion conditions visible in results");
+        if(screenshots){js("document.querySelector('.raid-potions').open=true;document.querySelector('.raid-potions').scrollIntoView({block:'start'})");captureLayout("raid-potions",false);}
+        int loads=activity.documentLoads+1;runOnMainSync(()->activity.webView.reload());awaitDocument(loads);until("!!document.querySelector('#raid-revives')","raid controls after reload");
+        check(js("document.querySelector('#raid-sila-potion').checked&&document.querySelector('#raid-revives').value==='2'").equals("true"),"potion settings survive reload");
+        click("#raid-sila-potion");select("#raid-revives","0");
+        check(TestActivity.reads==0&&TestActivity.claims==0,"current catalogue and potions never contact account");
+        BattleData.Catalog catalog=BattleData.load(getTargetContext());long now=System.currentTimeMillis();JSONArray raw=new JSONArray();
+        for(int i=0;i<2;i++){JSONObject iv=new JSONObject();for(String stat:BattleData.STATS)iv.put(stat,10+i);raw.put(new JSONObject().put("id","test-new-"+i).put("species","myandash").put("level",20+i).put("individual",iv));}
+        JSONObject snapshot=CollectionSnapshot.create(BattleData.parse(raw,catalog,"",now,false),catalog,now,new JSONObject().put("xp",2500).put("items",new JSONObject().put("dust",10000)).put("sparks",new JSONObject().put("myandash",12)));
+        check(snapshot.getJSONArray("spirits").length()==2&&snapshot.getString("gameVersion").equals("0.46"),"native account parser knows new spirit copies");
+        check(snapshot.getJSONObject("resources").getJSONObject("sparks").getInt("myandash")==12,"native new species sparks");
+        js("window.__newYard=MifoCollection.parse("+snapshot.toString()+",MifoCatalog)");
+        check(js("window.__newYard.spirits.length===2&&window.__newYard.spirits[0].id!==window.__newYard.spirits[1].id").equals("true"),"new native snapshot accepted by web without merging copies");
+        page("battle");noPrivateLabels();
+    }
     private void enter(String selector,String value) throws Exception {js("(()=>{const e=document.querySelector("+JSONObject.quote(selector)+");e.value="+JSONObject.quote(value)+";e.dispatchEvent(new Event('input',{bubbles:true}));})()");}
     private void verifyPlannerCatalog() throws Exception {
         js("window.__arenaBeforePlanner=JSON.stringify(MifoArena.teams())");page("rankings");click("#open-upgrade-catalog");

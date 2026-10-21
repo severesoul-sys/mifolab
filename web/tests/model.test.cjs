@@ -6,7 +6,7 @@ const config=(id,level=40,iv=15)=>C.defaultConfig(id,level,iv);
 const fixed={mode:'raid',seed:'verify',a:{attack:1,defense:1},b:{attack:.65,defense:0}};
 
 test('all playable catalog entries have valid combat stats',()=>{
-  const rows=catalog.species.filter(row=>!catalog.excluded.includes(row.id));assert.equal(rows.length,99);
+  const rows=catalog.species.filter(row=>!catalog.excluded.includes(row.id)&&!catalog.retired.includes(row.id));assert.equal(rows.length,138);
   for(const row of rows){const spirit=C.fighter(config(row.id),catalog);assert.ok(spirit.hpMax>=10);assert.equal(spirit.power,C.STATS.reduce((total,stat)=>total+spirit.stats[stat],0)*2);assert.ok(spirit.elements.every(type=>C.TYPES.includes(type)));}
 });
 test('element wheel, light/dark and dual defenses follow client',()=>{

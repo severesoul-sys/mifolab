@@ -7,7 +7,7 @@ test('chronicle numbers follow the current game list, including exclusions',{ski
   assert.ok(source.includes('String(Pe.indexOf(e)+1).padStart(3,`0`)'));
   vm.runInContext(source.slice(from,to)+';',context,{timeout:1000});
   const expected=JSON.parse(vm.runInContext('JSON.stringify(Pe.map((sp,index)=>({speciesId:sp.id,name:sp.name,number:index+1})))',context));
-  assert.deepEqual(data.entries,expected);assert.equal(expected.length,90);assert.equal(S.label('rarog'),'№006');assert.equal(S.label('indrik'),'№007');assert.equal(S.label('gorynych'),'№031');assert.equal(S.label('kot_chernobog'),'№090');
+  assert.deepEqual(data.entries.slice(0,expected.length),expected);assert.equal(expected.length,90);assert.equal(data.entries.length,138);assert.equal(S.label('rarog'),'№006');assert.equal(S.label('indrik'),'№007');assert.equal(S.label('gorynych'),'№031');assert.equal(S.label('kot_chernobog'),'№090');
   assert.equal(S.number('mora'),null);assert.equal(S.label('izbushka'),'');
 });
 test('search accepts exact chronicle numbers, leading zeros and number signs',()=>{

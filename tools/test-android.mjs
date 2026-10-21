@@ -19,4 +19,4 @@ const report=run(['shell','am','instrument',...screenshots?['-e','screenshots','
 console.log(report);fs.writeFileSync(path.join(root,'dist/android-tests.txt'),report);
 if(!report.includes('assertions passed')||!report.includes('INSTRUMENTATION_CODE: -1')){try{fs.writeFileSync(path.join(root,'dist/android-failure.png'),run(['exec-out','run-as','ru.mifolab.android','cat','files/mifolab-failure.png'],null));}catch{}throw Error('Android checks failed');}
 fs.writeFileSync(path.join(root,'dist/android-screen.png'),run(['exec-out','run-as','ru.mifolab.android','cat','files/mifolab-phone.png'],null));
-if(screenshots)for(const name of ['upgrade-catalog','upgrade-result','upgrade-owned','arena','raids','collection'])fs.writeFileSync(path.join(root,'dist',name+'.png'),run(['exec-out','run-as','ru.mifolab.android','cat','files/layout-'+name+'.png'],null));
+if(screenshots)for(const name of ['upgrade-catalog','upgrade-result','upgrade-owned','arena','raids','raid-potions','collection'])fs.writeFileSync(path.join(root,'dist',name+'.png'),run(['exec-out','run-as','ru.mifolab.android','cat','files/layout-'+name+'.png'],null));

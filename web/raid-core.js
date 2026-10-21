@@ -4,7 +4,8 @@
   function num(value,min,max,label,integer=false){if(typeof value!=='number'||!Number.isFinite(value)||value<min||value>max||(integer&&!Number.isInteger(value)))throw Error(label+`: допустимо ${min}–${max}`);return value;}
   function settings(input={}){
     const accuracy=(value,label)=>value==null?null:num(value,0,1,label);
-    return {seed:String(input.seed??'mifo-raids').slice(0,100),attack:accuracy(input.attack,'Руна атаки'),defense:accuracy(input.defense,'Руна защиты'),probabilityMax:num(input.probabilityMax??.5,0,1,'Вероятность максимума'),bossAccuracy:input.bossAccuracy==null?null:num(input.bossAccuracy,0,1,'Руна босса'),durationMs:num(input.durationMs??178000,5000,D.rules.fightSec*1000,'Время боя, мс',true),attackRuneMs:num(input.attackRuneMs??3000,100,3000,'Время атаки, мс',true),defenseRuneMs:num(input.defenseRuneMs??2500,100,2500,'Время защиты, мс',true),swapMs:num(input.swapMs??500,0,10000,'Смена духа, мс',true)};
+    if(input.silaPotion!=null&&typeof input.silaPotion!=='boolean')throw Error('Выберите, использовать ли Отвар силы');
+    return {seed:String(input.seed??'mifo-raids').slice(0,100),attack:accuracy(input.attack,'Руна атаки'),defense:accuracy(input.defense,'Руна защиты'),probabilityMax:num(input.probabilityMax??.5,0,1,'Вероятность максимума'),bossAccuracy:input.bossAccuracy==null?null:num(input.bossAccuracy,0,1,'Руна босса'),durationMs:num(input.durationMs??178000,5000,D.rules.fightSec*1000,'Время боя, мс',true),attackRuneMs:num(input.attackRuneMs??3000,100,3000,'Время атаки, мс',true),defenseRuneMs:num(input.defenseRuneMs??2500,100,2500,'Время защиты, мс',true),swapMs:num(input.swapMs??500,0,10000,'Смена духа, мс',true),silaPotion:input.silaPotion??false,revives:num(input.revives??0,0,D.brew.livePerFight,'Живая вода на игрока',true)};
   }
   function boss(id){
     const definition=D.bosses.find(row=>row.id===id);if(!definition)throw Error('Босс отсутствует в текущем списке игры');
@@ -24,10 +25,12 @@
   // pauses; only damage to the boss is shared by the room.
   function solo(team,bossId,input={},capture=false){
     const options=settings(input),fighters=validateTeam(team),enemy=boss(bossId),random=C.rng(options.seed),runes=C.rng(options.seed+':runes');
+    if(options.silaPotion)for(const member of fighters)member.stats.sila=Math.round(member.stats.sila*(1+D.brew.silaBuff));
+    let revivesLeft=options.revives;const revivals=[];
     let active=fighters.findIndex(member=>member.hp>0),time=0,myNext=0,aiNext=1500,pending=null,replaceAt=null,lastRune=null,done=active<0,reason=done?'fainted':'time',dealt=0,steps=0;
     const hits=[],events=[],bySlot=fighters.map(()=>({damage:0,fast:0,ultra:0}));
     function record(kind,extra={}){if(capture)events.push({time,kind,active,hp:fighters.map(row=>row.hp),energy:fighters.map(row=>row.energy),bossHp:enemy.hp,bossEnergy:enemy.energy,...extra});}
-    function faint(){if(fighters.some(row=>row.hp>0))replaceAt=time+options.swapMs;else{done=true;reason='fainted';}}
+    function faint(){if(fighters.some(row=>row.hp>0)||revivesLeft>0)replaceAt=time+options.swapMs;else{done=true;reason='fainted';}}
     function hit(side,ultra,accuracy=1,defense=0){
       const me=fighters[active],attacker=side?enemy:me,target=side?me:enemy;
       const raw=damage(attacker,target,ultra,accuracy,defense,side?enemy.attackMultiplier:1),amount=Math.min(target.hp,raw);target.hp-=amount;
@@ -39,7 +42,14 @@
     record('start');
     while(!done&&steps++<20000){
       if(replaceAt!=null){
-        if(replaceAt>options.durationMs)break;time=replaceAt;replaceAt=null;active=fighters.findIndex(row=>row.hp>0);myNext=time+400;aiNext=Math.max(aiNext,time+800);record('swap');continue;
+        if(replaceAt>options.durationMs)break;time=replaceAt;replaceAt=null;active=fighters.findIndex(row=>row.hp>0);
+        if(active<0){
+          // The game ends the pick window at 10 seconds before accepting a revive.
+          if(revivesLeft<=0||options.swapMs>=D.battle.faintPickMs){done=true;reason='fainted';break;}
+          active=0;revivesLeft--;fighters[active].hp=Math.max(1,Math.round(fighters[active].hpMax*D.brew.liveHp));
+          revivals.push({time,slot:active});record('revive',{slot:active});
+        }
+        myNext=time+400;aiNext=Math.max(aiNext,time+800);record('swap');continue;
       }
       if(pending){
         const duration=pending.side?options.defenseRuneMs:options.attackRuneMs;
@@ -57,7 +67,7 @@
     }
     if(!done){time=options.durationMs;reason=steps>=20000?'limit':'time';}
     record('end',{reason});
-    return {won:reason==='won',reason,time,damage:dealt,hits,events,bySlot,fighters,boss:enemy,options,active};
+    return {won:reason==='won',reason,time,damage:dealt,hits,events,bySlot,fighters,boss:enemy,options,active,revivals,revivesUsed:revivals.length};
   }
   function group(teams,bossId,input={},capture=true){
     if(!Array.isArray(teams)||!teams.length||teams.length>D.rules.maxPlayers)throw Error('В рейде от 1 до 6 игроков');
@@ -69,7 +79,7 @@
     const players=runs.map((run,index)=>{
       const latest=capture?[...run.events].reverse().find(event=>event.time<=time):null;
       const hp=latest?.hp||run.fighters.map(row=>row.hp);
-      return {player:index,damage:contributions[index],potentialDamage:run.damage,slotDamage:slotDamage[index],hp,alive:hp.filter(value=>value>0).length,reason:winAt!=null?'group-win':run.reason,time:Math.min(run.time,time),events:capture?run.events.filter(event=>event.time<=time):[]};
+      return {player:index,damage:contributions[index],potentialDamage:run.damage,slotDamage:slotDamage[index],hp,alive:hp.filter(value=>value>0).length,revivesUsed:run.revivals.filter(event=>event.time<=time).length,reason:winAt!=null?'group-win':run.reason,time:Math.min(run.time,time),events:capture?run.events.filter(event=>event.time<=time):[]};
     });
     return {won:winAt!=null,time,hp:remaining,hpMax:enemy.hpMax,damage:enemy.hpMax-remaining,players,timeline,options,bossId};
   }
