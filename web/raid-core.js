@@ -4,8 +4,9 @@
   function num(value,min,max,label,integer=false){if(typeof value!=='number'||!Number.isFinite(value)||value<min||value>max||(integer&&!Number.isInteger(value)))throw Error(label+`: допустимо ${min}–${max}`);return value;}
   function settings(input={}){
     const accuracy=(value,label)=>value==null?null:num(value,0,1,label);
+    const friendBonus=num(input.friendBonus??0,0,.15,'Бонус дружбы');
     if(input.silaPotion!=null&&typeof input.silaPotion!=='boolean')throw Error('Выберите, использовать ли Отвар силы');
-    return {seed:String(input.seed??'mifo-raids').slice(0,100),attack:accuracy(input.attack,'Руна атаки'),defense:accuracy(input.defense,'Руна защиты'),probabilityMax:num(input.probabilityMax??.5,0,1,'Вероятность максимума'),bossAccuracy:input.bossAccuracy==null?null:num(input.bossAccuracy,0,1,'Руна босса'),durationMs:num(input.durationMs??178000,5000,D.rules.fightSec*1000,'Время боя, мс',true),attackRuneMs:num(input.attackRuneMs??3000,100,3000,'Время атаки, мс',true),defenseRuneMs:num(input.defenseRuneMs??2500,100,2500,'Время защиты, мс',true),swapMs:num(input.swapMs??500,0,10000,'Смена духа, мс',true),silaPotion:input.silaPotion??false,revives:num(input.revives??0,0,D.brew.livePerFight,'Живая вода на игрока',true)};
+    return {friendBonus,seed:String(input.seed??'mifo-raids').slice(0,100),attack:accuracy(input.attack,'Руна атаки'),defense:accuracy(input.defense,'Руна защиты'),probabilityMax:num(input.probabilityMax??.5,0,1,'Вероятность максимума'),bossAccuracy:input.bossAccuracy==null?null:num(input.bossAccuracy,0,1,'Руна босса'),durationMs:num(input.durationMs??178000,5000,D.rules.fightSec*1000,'Время боя, мс',true),attackRuneMs:num(input.attackRuneMs??3000,100,3000,'Время атаки, мс',true),defenseRuneMs:num(input.defenseRuneMs??2500,100,2500,'Время защиты, мс',true),swapMs:num(input.swapMs??500,0,10000,'Смена духа, мс',true),silaPotion:input.silaPotion??false,revives:num(input.revives??0,0,D.brew.livePerFight,'Живая вода на игрока',true)};
   }
   function boss(id){
     const definition=D.bosses.find(row=>row.id===id);if(!definition)throw Error('Босс отсутствует в текущем списке игры');
@@ -33,11 +34,14 @@
     function faint(){if(fighters.some(row=>row.hp>0)||revivesLeft>0)replaceAt=time+options.swapMs;else{done=true;reason='fainted';}}
     function hit(side,ultra,accuracy=1,defense=0){
       const me=fighters[active],attacker=side?enemy:me,target=side?me:enemy;
-      const raw=damage(attacker,target,ultra,accuracy,defense,side?enemy.attackMultiplier:1),amount=Math.min(target.hp,raw);target.hp-=amount;
+      const base=damage(attacker,target,ultra,accuracy,defense,side?enemy.attackMultiplier:1);
+      // Scenario estimate: preserve fractional bonus credit instead of inventing
+      // a server rounding rule. No friendship bonus affects incoming attacks.
+      const raw=base*(side?1:1+options.friendBonus),amount=Math.min(target.hp,raw);target.hp-=amount;
       attacker.energy=ultra?0:Math.min(100,attacker.energy+12);
-      if(!side){dealt+=amount;bySlot[active].damage+=amount;bySlot[active][ultra?'ultra':'fast']++;hits.push({time,amount,slot:active});}
+      if(!side){dealt+=amount;bySlot[active].damage+=amount;bySlot[active][ultra?'ultra':'fast']++;hits.push({time,amount,baseAmount:amount/(1+options.friendBonus),slot:active});}
       record(ultra?'ultra':'hit',{side,amount,raw,attack:accuracy,defense,slot:active});
-      if(enemy.hp===0){done=true;reason='won';}else if(me.hp===0)faint();
+      if(enemy.hp<=0){done=true;reason='won';}else if(me.hp===0)faint();
     }
     record('start');
     while(!done&&steps++<20000){
@@ -67,11 +71,11 @@
     }
     if(!done){time=options.durationMs;reason=steps>=20000?'limit':'time';}
     record('end',{reason});
-    return {won:reason==='won',reason,time,damage:dealt,hits,events,bySlot,fighters,boss:enemy,options,active,revivals,revivesUsed:revivals.length};
+    return {won:reason==='won',reason,time,damage:dealt,baseDamage:dealt/(1+options.friendBonus),friendDamage:dealt-dealt/(1+options.friendBonus),hits,events,bySlot,fighters,boss:enemy,options,active,revivals,revivesUsed:revivals.length,revivesRemaining:revivesLeft};
   }
   function group(teams,bossId,input={},capture=true){
     if(!Array.isArray(teams)||!teams.length||teams.length>D.rules.maxPlayers)throw Error('В рейде от 1 до 6 игроков');
-    const options=settings(input),enemy=boss(bossId),runs=teams.map((team,index)=>solo(team,bossId,{...options,seed:options.seed+':player:'+index},capture));
+    const options=settings({...input,friendBonus:teams.length===1?0:input.friendBonus}),enemy=boss(bossId),runs=teams.map((team,index)=>solo(team,bossId,{...options,seed:options.seed+':player:'+index},capture));
     const hits=runs.flatMap((run,player)=>run.hits.map((hit,index)=>({...hit,player,index}))).sort((a,b)=>a.time-b.time||a.player-b.player||a.index-b.index);
     const contributions=teams.map(()=>0),timeline=[{time:0,hp:enemy.hp}],slotDamage=teams.map(team=>team.map(()=>0));let remaining=enemy.hp,winAt=null;
     for(const hit of hits){const amount=Math.min(remaining,hit.amount);remaining-=amount;contributions[hit.player]+=amount;slotDamage[hit.player][hit.slot]+=amount;if(capture)timeline.push({time:hit.time,hp:remaining});if(!remaining){winAt=hit.time;break;}}
@@ -79,9 +83,11 @@
     const players=runs.map((run,index)=>{
       const latest=capture?[...run.events].reverse().find(event=>event.time<=time):null;
       const hp=latest?.hp||run.fighters.map(row=>row.hp);
-      return {player:index,damage:contributions[index],potentialDamage:run.damage,slotDamage:slotDamage[index],hp,alive:hp.filter(value=>value>0).length,revivesUsed:run.revivals.filter(event=>event.time<=time).length,reason:winAt!=null?'group-win':run.reason,time:Math.min(run.time,time),events:capture?run.events.filter(event=>event.time<=time):[]};
+      const revivesUsed=run.revivals.filter(event=>event.time<=time).length;
+      return {player:index,damage:contributions[index],baseDamage:contributions[index]/(1+options.friendBonus),friendDamage:contributions[index]-contributions[index]/(1+options.friendBonus),potentialDamage:run.damage,slotDamage:slotDamage[index],hp,alive:hp.filter(value=>value>0).length,revivesUsed,revivesRemaining:options.revives-revivesUsed,reason:winAt!=null?'group-win':run.reason,time:Math.min(run.time,time),events:capture?run.events.filter(event=>event.time<=time):[]};
     });
-    return {won:winAt!=null,time,hp:remaining,hpMax:enemy.hpMax,damage:enemy.hpMax-remaining,players,timeline,options,bossId};
+    const damage=enemy.hpMax-remaining,baseDamage=damage/(1+options.friendBonus);
+    return {won:winAt!=null,time,hp:remaining,hpMax:enemy.hpMax,damage,baseDamage,friendDamage:damage-baseDamage,players,timeline,options,bossId};
   }
   function* series(teams,bossId,input={},trials=100){
     num(trials,1,200,'Число повторов',true);let wins=0,damage=0,wonTime=0;
@@ -98,7 +104,8 @@
       let damage=0;
       for(let player=0;player<6;player++){
         damage+=solo(teams[player],bossId,{...options,seed:`${options.seed}:trial:${trial}:player:${player}`}).damage;
-        rows[player].wins+=Number(damage>=hp);rows[player].damage+=Math.min(hp,damage);
+        const credited=player===0&&options.friendBonus?solo(teams[0],bossId,{...options,friendBonus:0,seed:`${options.seed}:trial:${trial}:player:0`}).damage:damage;
+        rows[player].wins+=Number(credited>=hp);rows[player].damage+=Math.min(hp,credited);
       }
       yield {done:trial+1,total:trials};
     }

@@ -21,7 +21,7 @@
     let data=input;
     if(typeof input==='string'){if(input.length>12*1024*1024)throw new Error('Данные подворья слишком большие');try{data=JSON.parse(input.replace(/^\uFEFF/,''));}catch{throw new Error('Не удалось прочитать подворье. Получите духов заново.');}}
     if(!data||![FORMAT,LEGACY_FORMAT].includes(data.format)||data.version!==1)throw new Error('Не удалось прочитать подворье. Получите духов заново.');
-    if(!Array.isArray(data.spirits)||data.spirits.length>MAX_SPIRITS)throw new Error('Поддерживается не больше 2000 духов');
+    if(!Array.isArray(data.spirits)||data.spirits.length>MAX_SPIRITS)throw new Error('Список духов слишком большой или повреждён');
     if(!Array.isArray(data.unavailable)||data.unavailable.length>MAX_SPIRITS)throw new Error('Неверный список неполных записей');
     const unavailable=data.unavailable.map(value=>S.issue(text(value,'неполная запись',1000)));
     const total=num(data.total,0,MAX_SPIRITS,'количество духов',true);
@@ -45,7 +45,9 @@
     const gameVersion=text(data.gameVersion,'версия игры',50);
     if(gameVersion!==catalog.version&&![gameVersion,catalog.version].every(version=>['0.37','0.42','0.44','0.45','0.46'].includes(version)))warnings.push('Подворье получено для другой версии игры. Прогноз боя может отличаться.');
     if(unavailable.length)warnings.push(`Не участвуют в боях: ${unavailable.length}. Причины показаны ниже.`);
-    return {format:FORMAT,version:1,updatedAt:num(data.updatedAt??data.exportedAt,1,8640000000000000,'дата обновления',true),gameVersion,total,spirits,unavailable,warnings,resources:resources(data.resources,catalog)};
+    let yard=null;
+    if(data.yard&&Number.isInteger(data.yard.capacity)&&data.yard.capacity>=250&&data.yard.capacity<=500)yard={used:total,capacity:data.yard.capacity,maximum:500};
+    return {format:FORMAT,version:1,updatedAt:num(data.updatedAt??data.exportedAt,1,8640000000000000,'дата обновления',true),gameVersion,total,spirits,unavailable,warnings,yard,resources:resources(data.resources,catalog)};
   }
   function toConfig(row,healed=true){return {speciesId:row.speciesId,level:row.level,iv:{...row.iv},nature:{...row.nature},health:healed?100:row.health,cheer:100,manualStats:{...row.stats},baseStatsOverride:{...row.baseStats},elementsOverride:[...row.elements],instanceId:row.id,displayName:row.name,source:'game',snapshotStats:true,shiny:row.shiny};}
   function options(input={}){

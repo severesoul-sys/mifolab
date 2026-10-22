@@ -5,6 +5,9 @@
   document.documentElement.classList.add('android-app');
   const gameIcon=kind=>`<span class="game-icon${kind==='yard'?' game-icon-yard':''}" aria-hidden="true"><img src="icon-${kind}.${kind==='yard'?'svg':'png'}" alt="" draggable="false"></span>`;
   const header=document.createElement('header');header.className='mobile-header';header.innerHTML=`<a href="#battle" aria-label="Mifo Lab — на арену">MIFO <span>LAB</span></a><button id="mobile-account" aria-label="Мои духи и подключение аккаунта">${gameIcon('yard')}<span>Мои духи</span></button>`;document.body.prepend(header);
+  const fullscreen=document.createElement('button');fullscreen.id='mobile-fullscreen';fullscreen.textContent='⛶';
+  function fullscreenLabel(){const on=native.fullscreen();fullscreen.setAttribute('aria-pressed',String(on));fullscreen.setAttribute('aria-label',on?'Выйти из полного экрана':'На весь экран');fullscreen.title=on?'Выйти из полного экрана':'На весь экран';}
+  fullscreenLabel();header.append(fullscreen);fullscreen.addEventListener('click',()=>{native.setFullscreen(!native.fullscreen());fullscreenLabel();});
   $('#mobile-account').addEventListener('click',()=>arena.navigate('collection'));
   const names={battle:['⚔','Арена'],rankings:['▥','Рейтинг'],raids:[gameIcon('raids'),'Рейды'],training:['◇','Руны'],elements:['✳','Справка'],collection:[gameIcon('yard'),'Мои духи']};
   const nav=$('.sidebar nav');for(const [id,[icon,label]] of Object.entries(names)){const button=nav.querySelector(`[data-tab="${id}"]`);button.setAttribute('aria-label',id==='elements'?'Стихии и отряд':id==='training'?'Тренировка рун':id==='rankings'?'Рейтинг духов':label);button.innerHTML=`<span class="nav-icon" aria-hidden="true">${icon}</span><span>${label}</span>`;nav.append(button);}
@@ -75,7 +78,7 @@
       $('#mobile-account').classList.toggle('connected',!!event.connected);
     },
 
-    back(){if($('#rune-dialog').open){$('#rune-close').click();return true;}if(location.hash==='#upgrade'){window.MifoUpgradeUI.back();return true;}if(location.hash!=='#battle'){arena.navigate('battle');return true;}return false;}
+    back(){if($('#squad-dialog')?.open){$('#squad-dialog').close();return true;}if($('#rune-dialog').open){$('#rune-close').click();return true;}if(location.hash==='#upgrade'){window.MifoUpgradeUI.back();return true;}if(location.hash!=='#battle'){arena.navigate('battle');return true;}return false;}
   };
   document.addEventListener('visibilitychange',()=>{if(document.hidden)arena.pause();});
   native.ready();

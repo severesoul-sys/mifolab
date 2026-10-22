@@ -229,7 +229,8 @@
       if(!['a','b'].includes(side)||![1,6].includes(size)||!Number.isInteger(slot)||slot<0||slot>=size)throw new Error('Неверное место в команде');
       configs.forEach(item=>C.fighter(item,catalog));
       if((replace&&configs.length!==6)||(!replace&&configs.length!==1))throw new Error('Неверное число духов для команды');
-      if(new Set(configs.map(item=>item.instanceId)).size!==configs.length)throw new Error('В команде повторяется экземпляр');
+      const instanceIds=configs.map(item=>item.instanceId).filter(Boolean);
+      if(new Set(instanceIds).size!==instanceIds.length)throw new Error('В команде повторяется экземпляр');
       stopLive();const target=team(side),copies=JSON.parse(JSON.stringify(configs));
       if(replace)target.splice(0,6,...copies);
       else{const previous=target.findIndex(item=>item.instanceId&&item.instanceId===copies[0].instanceId);if(previous>=0&&previous!==slot)target[previous]=target[slot];target[slot]=copies[0];}

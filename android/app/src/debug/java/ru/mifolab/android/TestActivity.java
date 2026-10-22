@@ -24,7 +24,7 @@ public final class TestActivity extends MainActivity {
         }
         rows.put(new JSONObject().put("id","test-future").put("species","future-species"));
         return new JSONObject().put("save",new JSONObject().put("spirits",rows).put("buddy",new JSONObject().put("id","test-spirit-4"))
-            .put("xp",7253000).put("items",new JSONObject().put("dust",50000).put("coins",123).put("private","PRIVATE-SENTINEL"))
+            .put("yardSlots",100).put("xp",7253000).put("items",new JSONObject().put("dust",50000).put("coins",123).put("private","PRIVATE-SENTINEL"))
             .put("sparks",new JSONObject().put("rarog",30).put("indrik",9).put("unknown","PRIVATE-SENTINEL"))
             .put("lat",55.12345).put("token",TEST_TOKEN)).put("account","PRIVATE-SENTINEL");
     };}

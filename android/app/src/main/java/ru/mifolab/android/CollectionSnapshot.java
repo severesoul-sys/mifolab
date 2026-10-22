@@ -23,6 +23,9 @@ final class CollectionSnapshot {
         for(String reason:parsed.unavailable){String value=reason.toLowerCase(java.util.Locale.ROOT);
             issues.put(value.contains("вид отсутствует")?"Вид этого духа пока отсутствует в каталоге.":value.contains("повтор")?"Повторяющаяся запись в подворье. Обновите список духов.":"Не удалось получить все характеристики духа. Обновите подворье.");
         }
+        Object slots=count(save.opt("yardSlots"));
+        if(slots instanceof Number)result.put("yard",new JSONObject().put("used",parsed.total).put("capacity",250+Math.min(250,((Number)slots).longValue())).put("maximum",500));
+        else if(!save.has("yardSlots"))result.put("yard",new JSONObject().put("used",parsed.total).put("capacity",250).put("maximum",500));
         return result.put("spirits",rows).put("unavailable",issues).put("resources",resources(save,catalog));
     }
     static JSONObject resources(JSONObject save,BattleData.Catalog catalog) throws JSONException {

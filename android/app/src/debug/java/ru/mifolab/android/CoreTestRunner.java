@@ -46,6 +46,7 @@ public final class CoreTestRunner extends Instrumentation {
         check(js("document.querySelector('#mobile-connect-form').hidden").equals("false"),"login optional initially");check(js("document.documentElement.scrollWidth<=window.innerWidth+1").equals("true"),"no page horizontal overflow");
         verifyPlannerCatalog();
         verifyCurrentUpdate();
+        verifyNewFeatures();
         captureLayout("arena");
         if(screenshots){search("#species-search-b","гор");captureLayout("search-b");js("document.activeElement.blur();document.querySelector('#team-a details').open=true");captureLayout("arena-details");js("document.querySelector('#team-a details').open=false");}
         page("battle");search("#species-search-a","№ 006");check(js("document.querySelectorAll('#species-search-a-list .species-option').length===1&&document.querySelector('#species-search-a-list').textContent.includes('Рарог')").equals("true"),"arena search by chronicle number");click("#species-search-a-list .species-option");
@@ -63,6 +64,7 @@ public final class CoreTestRunner extends Instrumentation {
         until("window.MifoOwned.get()?.spirits.length===9&&!document.querySelector('.mobile-connected').hidden","manual fetch directly populates collection");
         check(TestActivity.claims==1&&TestActivity.reads==1,"only claim and GET yard called");
         verifyPlannerYard();
+        check(js("document.querySelector('#owned-capacity').textContent.includes('10 из 350')&&MifoOwned.get().yard.maximum===500").equals("true"),"yard population includes unavailable records and current purchased capacity");
         captureLayout("collection");
         check(js("window.MifoOwned.get().format==='mifolab-collection'&&window.MifoOwned.get().updatedAt>0").equals("true"),"current collection format");check(js("window.MifoOwned.get().spirits[1].stats.sila===172").equals("true"),"exact caught stats");check(js("window.MifoOwned.get().unavailable.length===1").equals("true"),"unknown record disclosed");
         check(!js("JSON.stringify(localStorage)").contains(TestActivity.TEST_TOKEN),"token never reaches web storage");check(!js("JSON.stringify(window.MifoOwned.get())").contains("PRIVATE-SENTINEL"),"account fields stripped");check(js("document.querySelector('#mobile-code').value==='' ").equals("true"),"code field cleared");
@@ -111,6 +113,21 @@ public final class CoreTestRunner extends Instrumentation {
         js("window.__newYard=MifoCollection.parse("+snapshot.toString()+",MifoCatalog)");
         check(js("window.__newYard.spirits.length===2&&window.__newYard.spirits[0].id!==window.__newYard.spirits[1].id").equals("true"),"new native snapshot accepted by web without merging copies");
         page("battle");noPrivateLabels();
+    }
+    private void verifyNewFeatures() throws Exception {
+        page("battle");click("[data-open-squads=\"a\"]");until("document.querySelector('#squad-dialog').open","squad library opens");
+        enter("#squad-name","Проверочный отряд");click("#squad-save-form button");
+        check(js("document.querySelectorAll('[data-squad-load]').length===1").equals("true"),"named squad saved locally");click("#squad-close");
+        page("raids");click("[data-open-squads=\"raid\"]");click("[data-squad-load]");
+        check(js("!document.querySelector('#squad-dialog').open&&MifoRaidUI.currentTeam().filter(Boolean).length===1").equals("true"),"saved arena spirit loads into raid with remaining slots empty");
+        select("#raid-friend-bonus","15");select("#raid-count","2");click("#raid-run");
+        check(js("document.querySelector('#raid-result').textContent.includes('Бонус дружбы: 15%')").equals("true"),"raid displays friendship scenario");
+        click("#mobile-fullscreen");check(js("MifoNative.fullscreen()===true").equals("true"),"fullscreen enabled through native preference");
+        int loads=activity.documentLoads+1;runOnMainSync(()->activity.webView.reload());awaitDocument(loads);until("!!document.querySelector('#mobile-fullscreen')","new controls after reload");
+        check(js("MifoNative.fullscreen()&&document.querySelector('#mobile-fullscreen').getAttribute('aria-pressed')==='true'&&document.querySelector('#raid-friend-bonus').value==='15'").equals("true"),"display and friendship choices survive reload");
+        click("[data-open-squads=\"raid\"]");check(js("document.querySelector('#squad-list').textContent.includes('Проверочный отряд')").equals("true"),"named squads survive reload");click("#squad-close");
+        click("#mobile-fullscreen");select("#raid-friend-bonus","0");select("#raid-count","1");
+        check(TestActivity.reads==0&&TestActivity.claims==0,"new offline features never fetch account");page("battle");
     }
     private void enter(String selector,String value) throws Exception {js("(()=>{const e=document.querySelector("+JSONObject.quote(selector)+");e.value="+JSONObject.quote(value)+";e.dispatchEvent(new Event('input',{bubbles:true}));})()");}
     private void verifyPlannerCatalog() throws Exception {

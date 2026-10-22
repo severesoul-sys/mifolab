@@ -17,6 +17,9 @@
     $('#owned-content').hidden=!collection;$('#owned-empty').hidden=!!collection;if(!collection)return;
     const species=new Set(collection.spirits.map(row=>row.speciesId)).size;
     $('#owned-summary').innerHTML=`<div><b>${number(collection.spirits.length)}</b><span>пойманных духов</span></div><div><b>${species}</b><span>разных видов</span></div><div><b>${collection.spirits.filter(row=>row.shiny).length}</b><span>светлых</span></div><div><b>${new Date(collection.updatedAt).toLocaleString('ru-RU')}</b><span>последнее обновление подворья</span></div>`;
+    let capacity=$('#owned-capacity');if(!capacity){capacity=document.createElement('p');capacity.id='owned-capacity';$('#owned-summary').after(capacity);}
+    const yard=collection.yard;capacity.className='yard-capacity'+(yard&&yard.used>=yard.capacity?' full':'');
+    capacity.textContent=yard?`Подворье: ${yard.used} из ${yard.capacity} · максимум ${yard.maximum} мест${yard.used>=yard.capacity?' · заполнено':''}`:'Вместимость неизвестна · обновите духов по кнопке, когда потребуется.';
     $('#owned-warnings').hidden=!collection.warnings.length;
     $('#owned-warnings>div').innerHTML=collection.warnings.map(value=>`<p>${escape(value)}</p>`).join('')+(collection.unavailable.length?`<ul>${collection.unavailable.map(value=>`<li>${escape(value)}</li>`).join('')}</ul>`:'');
     $('#owned-rank').disabled=busy||collection.spirits.length<2;$('#owned-build').disabled=busy||collection.spirits.length<2;
