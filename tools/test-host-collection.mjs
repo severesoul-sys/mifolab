@@ -1,0 +1,10 @@
+import fs from 'node:fs';import path from 'node:path';import {fileURLToPath} from 'node:url';import {execFileSync} from 'node:child_process';import {createRequire} from 'node:module';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),require=createRequire(import.meta.url);
+const json=process.env.MIFOLAB_JSON_JAR,android=process.env.MIFOLAB_ANDROID_JAR,jdk=process.env.JAVA_HOME;
+if(!json||!android||!jdk)throw Error('Set MIFOLAB_JSON_JAR (org.json runtime), MIFOLAB_ANDROID_JAR and JAVA_HOME');
+const output=path.join(root,'.build','host-'+Date.now());fs.mkdirSync(output,{recursive:true});fs.writeFileSync(path.join(output,'catalog.json'),JSON.stringify(require('../web/catalog.js')));
+const main=path.join(root,'android/app/src/main/java/ru/mifolab/android'),cp=[json,android].join(path.delimiter);
+const args=['-encoding','UTF-8','-classpath',cp,'-d',output,...['BattleData','CombatModel','CollectionSnapshot'].map(name=>path.join(main,name+'.java')),path.join(root,'tools/host/CollectionHost.java')];
+fs.writeFileSync(path.join(output,'javac.args'),args.map(s=>'"'+s.replaceAll('\\','/')+'"').join('\n'));
+const exe=process.platform==='win32'?'.exe':'';execFileSync(path.join(jdk,'bin/javac'+exe),['@'+path.join(output,'javac.args')],{windowsHide:true,stdio:'inherit'});
+console.log(execFileSync(path.join(jdk,'bin/java'+exe),['-classpath',[output,cp].join(path.delimiter),'ru.mifolab.android.CollectionHost',path.join(output,'catalog.json')],{windowsHide:true,encoding:'utf8'}));
