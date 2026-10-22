@@ -1,4 +1,4 @@
-(function(root,factory){const api=factory(typeof module!=='undefined'&&module.exports?require('./core.js'):root.MifoCore,typeof module!=='undefined'&&module.exports?require('./raid-data.js'):root.MifoRaidData);if(typeof module!=='undefined'&&module.exports)module.exports=api;root.MifoRaids=api;})(typeof globalThis!=='undefined'?globalThis:this,function(C,D){
+(function(root,factory){const api=factory(typeof module!=='undefined'&&module.exports?require('./core.js'):root.MifoCore,typeof module!=='undefined'&&module.exports?require('./raid-data.js'):root.MifoRaidData,typeof module!=='undefined'&&module.exports?require('./upgrade-core.js'):root.MifoUpgrade);if(typeof module!=='undefined'&&module.exports)module.exports=api;root.MifoRaids=api;})(typeof globalThis!=='undefined'?globalThis:this,function(C,D,U){
   'use strict';
   const clone=value=>JSON.parse(JSON.stringify(value)),catalog=D.catalog;
   function num(value,min,max,label,integer=false){if(typeof value!=='number'||!Number.isFinite(value)||value<min||value>max||(integer&&!Number.isInteger(value)))throw Error(label+`: допустимо ${min}–${max}`);return value;}
@@ -12,6 +12,55 @@
     const definition=D.bosses.find(row=>row.id===id);if(!definition)throw Error('Босс отсутствует в текущем списке игры');
     const fighter=C.fighter(C.defaultConfig(id,definition.level,15),catalog);
     return {...fighter,...definition,hpMax:definition.hp,attackMultiplier:D.rules.attackK};
+  }
+  function upgradeBudget(input={}){
+    const value=input&&typeof input==='object'?input:{};
+    const playerLevel=Number.isSafeInteger(value.playerLevel)?value.playerLevel:(Number.isSafeInteger(value.playerXp)?U.playerLevel(value.playerXp):null);
+    if(playerLevel==null||playerLevel<1)throw Error('Уровень игрока для виртуальной прокачки неизвестен. Обновите Подворье.');
+    if(!Number.isSafeInteger(value.dust)||value.dust<0)throw Error('Запас Пыли для виртуальной прокачки неизвестен. Обновите Подворье.');
+    if(!value.sparks||typeof value.sparks!=='object'||Array.isArray(value.sparks))throw Error('Запасы Искр для виртуальной прокачки неизвестны. Обновите Подворье.');
+    const sparks={};for(const [speciesId,amount] of Object.entries(value.sparks)){if(!Number.isSafeInteger(amount)||amount<0)throw Error('Повреждён запас Искр. Обновите Подворье.');sparks[speciesId]=amount;}
+    return {playerLevel,dust:value.dust,sparks,cap:U.cap(playerLevel)};
+  }
+  function upgradePotential(config,bossId){
+    const fighter=C.fighter(config,catalog),enemy=boss(bossId);
+    const fast=C.fastDamage(fighter,enemy),ultra=C.ultraDamage(fighter,enemy,1,0);
+    const tempo=1000/Math.max(1,C.interval(fighter,enemy,520));
+    return (fast+ultra*.55)*tempo*(1+Math.max(0,fighter.stats.pryt-enemy.stats.pryt)/1000);
+  }
+  function upgradeCandidates(configs,bossId,input={}){
+    const budget=upgradeBudget(input),rows=[];
+    for(const config of configs){
+      const from=C.fighter(config,catalog).level,sparks=budget.sparks[config.speciesId]??0;
+      const maxPlan=from>=budget.cap?{affordableLevel:from,config:clone(config)}:U.plan(config,catalog,budget.cap,{playerLevel:budget.playerLevel,dust:budget.dust,sparks},false);
+      const target=maxPlan.affordableLevel??from;
+      const maxConfig=target===from?clone(config):maxPlan.config;
+      rows.push({id:config.instanceId||config.speciesId,speciesId:config.speciesId,from,target,config:clone(config),working:clone(config),maxConfig,potential:upgradePotential(maxConfig,bossId),currentPotential:upgradePotential(config,bossId),spentDust:0,spentSparks:0});
+    }
+    // Keep a broad pool so a weak, under-levelled spirit can enter after
+    // virtual strengthening, while avoiding thousands of expensive simulations.
+    rows.sort((a,b)=>b.potential-a.potential||b.currentPotential-a.currentPotential||String(a.id).localeCompare(String(b.id)));
+    const pool=rows.slice(0,Math.min(128,rows.length));
+    let dust=budget.dust;const sparks={...budget.sparks};
+    for(const row of pool){row.target=Math.min(row.target,budget.cap);}
+    while(true){
+      let best=null,bestValue=-Infinity;
+      for(const row of pool){
+        const level=C.fighter(row.working,catalog).level;if(level>=row.target)continue;
+        const dustCost=U.cost(level,level+1).dust,sparkCost=U.cost(level,level+1).sparks,available=sparks[row.speciesId]??0;
+        if(dustCost>dust||sparkCost>available)continue;
+        const next=U.plan(row.working,catalog,level+1,{playerLevel:budget.playerLevel,dust:dustCost,sparks:sparkCost},false).config;
+        const gain=upgradePotential(next,bossId)-upgradePotential(row.working,bossId),value=gain/Math.max(1,dustCost);
+        if(value>bestValue+1e-12||(Math.abs(value-bestValue)<1e-12&&gain>(best?.gain??-Infinity))){best={row,next,dustCost,sparkCost,gain};bestValue=value;}
+      }
+      if(!best)break;
+      best.row.working=best.next;best.row.spentDust+=best.dustCost;best.row.spentSparks+=best.sparkCost;dust-=best.dustCost;sparks[best.row.speciesId]=(sparks[best.row.speciesId]??0)-best.sparkCost;
+    }
+    const byId=new Map(pool.map(row=>{const fighter=C.fighter(row.working,catalog);return [row.id,{...row,config:row.working,level:fighter.level,power:fighter.power}];}));
+    const upgradedConfigs=configs.map(config=>byId.get(config.instanceId||config.speciesId)?.config||clone(config));
+    const plans=pool.map(row=>{const before=C.fighter(row.config,catalog),after=C.fighter(row.working,catalog);return {id:row.id,speciesId:row.speciesId,name:after.name,from:before.level,to:after.level,spentDust:row.spentDust,spentSparks:row.spentSparks,powerBefore:before.power,powerAfter:after.power};}).filter(row=>row.to>row.from);
+    const spentDust=plans.reduce((sum,row)=>sum+row.spentDust,0),spentSparks={};for(const row of plans)spentSparks[row.speciesId]=(spentSparks[row.speciesId]??0)+row.spentSparks;
+    return {configs:upgradedConfigs,plans,spentDust,spentSparks,remainingDust:dust,remainingSparks:sparks,playerLevel:budget.playerLevel,cap:budget.cap,available:configs.length,shortlisted:pool.length,heuristic:true};
   }
   function validateTeam(team){
     if(!Array.isArray(team)||!team.length||team.length>6)throw Error('Выберите от 1 до 6 духов');
@@ -143,12 +192,19 @@
     }
     return {team:selected.map(row=>clone(row.config)),available:ranked.length,shortlist:pool.length,complete:selected.length===6,ranked,score:bestScore};
   }
+  function* recommendUpgraded(configs,bossId,input={},budget={}){
+    const upgrade=upgradeCandidates(configs,bossId,budget);yield {stage:'upgrade',done:upgrade.plans.length,total:upgrade.shortlisted};
+    const picker=recommend(upgrade.configs,bossId,input);let next;
+    do{next=picker.next();if(!next.done)yield {stage:next.value.stage||'pick',done:next.value.done,total:next.value.total};}while(!next.done);
+    return {...next.value,upgrade};
+  }
   function* job(type,payload){
     if(type==='rank')return yield* attackers(payload.configs,payload.bossId,payload.options,payload.trials);
     if(type==='pick')return yield* recommend(payload.configs,payload.bossId,payload.options);
+    if(type==='pick-upgraded')return yield* recommendUpgraded(payload.configs,payload.bossId,payload.options,payload.upgrade);
     if(type==='counts')return yield* playerCounts(payload.teams,payload.bossId,payload.options,payload.trials);
     if(type==='series')return yield* series(payload.teams,payload.bossId,payload.options,payload.trials);
     throw Error('Неизвестный расчёт');
   }
-  return {catalog,settings,boss,validateTeam,damage,solo,group,series,playerCounts,attackers,recommend,job};
+  return {catalog,settings,boss,validateTeam,damage,solo,group,series,playerCounts,attackers,recommend,recommendUpgraded,upgradeBudget,upgradeCandidates,job};
 });
