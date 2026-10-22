@@ -12,6 +12,7 @@
     "build:release": "node tools/build-android.mjs --release",
     "build:unsigned": "node tools/build-android.mjs --unsigned",
     "test:android": "node tools/test-android.mjs",
-    "check:publish": "node tools/check-publish.mjs"
+    "check:publish": "node tools/check-publish.mjs",
+    "publish:release": "node tools/publish-release.mjs"
   }
 }

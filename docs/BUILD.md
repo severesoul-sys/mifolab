@@ -51,7 +51,21 @@ npm run build:android
 npm run build:release
 ```
 
-Готовый APK и его SHA-256 появятся в `dist/`. Для неподписанного APK без инструментальных проверок:
+Готовый подписанный APK — `dist/mifolab.apk`, контрольная сумма — `dist/mifolab.apk.sha256`, сведения о сборке — `dist/mifolab.apk.json`. В каждом выпуске GitHub прикрепляйте APK и контрольную сумму с этими постоянными именами и отмечайте актуальный выпуск как **Latest**. Версия по-прежнему задаётся `versionName` и `versionCode` в AndroidManifest.xml, а тег выпуска имеет вид `v1.3.0`.
+
+Постоянная ссылка для пользователей:
+
+<https://github.com/severesoul-sys/mifolab/releases/latest/download/mifolab.apk>
+
+После отправки проверенных исходников и тега в GitHub публикуйте сборку через GitHub CLI:
+
+```sh
+npm run publish:release -- --notes release-notes.md
+```
+
+Скрипт проверяет встроенную версию по метаданным сборки, подпись и SHA-256; загружает `mifolab.apk` и `mifolab.apk.sha256`; проверяет хеши на GitHub и лишь затем публикует новый выпуск как Latest. Повторный запуск с теми же файлами безопасен. Для проверки локальных файлов без сети: `npm run publish:release -- --check`.
+
+Для неподписанного APK без инструментальных проверок:
 
 ```sh
 npm run build:unsigned

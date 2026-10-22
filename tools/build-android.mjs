@@ -62,7 +62,9 @@ run(java,['-cp',path.join(buildTools,'lib/d8.jar'),'com.android.tools.r8.D8','--
 run(jar,['uf',path.join(build,'unsigned.apk'),'-C',build,'assets','-C',path.join(build,'dex'),'classes.dex']);
 run(path.join(buildTools,exe('zipalign')),['-f','4',path.join(build,'unsigned.apk'),path.join(build,'aligned.apk')]);
 const output=path.join(root,'dist');mkdir(output);
-const apk=path.join(output,`mifolab-${version}${mode==='release'?'':'-'+mode}.apk`);
+// All public releases use the same asset name for GitHub's /releases/latest/download URL.
+// Android keeps the version in its manifest; test and unsigned builds remain distinct.
+const apk=path.join(output,mode==='release'?'mifolab.apk':`mifolab-${version}-${mode}.apk`);
 if(debug){
   const signing=path.join(root,'.local/development-signing');mkdir(signing);
   key=path.join(signing,'debug.p12');passwordFile=path.join(signing,'password.txt');alias='mifolab-dev';

@@ -2,9 +2,11 @@
 
 Симулятор боёв духов для [Mifozov](https://mifozov.com): подбор команд, рейды, рейтинги и тренировка рун. Работает на Android и в браузере компьютера.
 
-**[Скачать APK для Android](https://github.com/severesoul-sys/mifolab/releases/latest)** · [Сборка приложения](docs/BUILD.md) · [Графика и данные](THIRD_PARTY_NOTICES.md)
+**[Скачать APK для Android](https://github.com/severesoul-sys/mifolab/releases/latest/download/mifolab.apk)** · [Что нового](https://github.com/severesoul-sys/mifolab/releases/latest) · [Сборка приложения](docs/BUILD.md) · [Графика и данные](THIRD_PARTY_NOTICES.md)
 
 Требуется Android 8.0 или новее. APK из Releases можно устанавливать поверх предыдущих официальных версий Mifo Lab с сохранением настроек и подворья.
+
+Постоянная ссылка скачивает `mifolab.apk` из актуального выпуска. Версия хранится внутри приложения; название установочного файла не меняется при обновлениях.
 
 ## Возможности
 
