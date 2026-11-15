@@ -1,8 +1,8 @@
-// Generated from the reviewed public client by tools/extract-046.cjs.
+// Catalogue generated from the reviewed public client by tools/update-catalog-067.cjs.
 (function(root){const data={
-  "version": "0.46",
-  "source": "https://mifozov.com/assets/index-CwPus7qr.js",
-  "sha256": "b4842122568b98bf39a45b155b97a1a2a57a6a44bd4aa7d948f6deab5f205a2d",
+  "version": "0.67",
+  "source": "https://mifozov.com/assets/index-CRYMzDSH.js",
+  "sha256": "8826ff489112a0da9d33584177fd6b4306f313606c579e6a41aa74a14a4fd21c",
   "entries": [
     {
       "speciesId": "ogonyok",
@@ -400,299 +400,314 @@
       "number": 79
     },
     {
+      "speciesId": "medunitsa",
+      "name": "Медуница",
+      "number": 80
+    },
+    {
       "speciesId": "zlatogriv",
       "name": "Конь Златогрив",
-      "number": 80
+      "number": 81
     },
     {
       "speciesId": "netopyr",
       "name": "Нетопырь",
-      "number": 81
+      "number": 82
     },
     {
       "speciesId": "korgorusha",
       "name": "Коргоруша",
-      "number": 82
+      "number": 83
     },
     {
       "speciesId": "zhaba",
       "name": "Бородавица",
-      "number": 83
+      "number": 84
     },
     {
       "speciesId": "sych",
       "name": "Полуночник",
-      "number": 84
+      "number": 85
     },
     {
       "speciesId": "cherny_petukh",
       "name": "Чёрный петух",
-      "number": 85
+      "number": 86
     },
     {
       "speciesId": "volkodlak",
       "name": "Волкодлак",
-      "number": 86
+      "number": 87
     },
     {
       "speciesId": "aspid",
       "name": "Аспид",
-      "number": 87
+      "number": 88
     },
     {
       "speciesId": "kashcheeva_utka",
       "name": "Кощеева утка",
-      "number": 88
+      "number": 89
     },
     {
       "speciesId": "vasilisk",
       "name": "Василиск",
-      "number": 89
+      "number": 90
     },
     {
       "speciesId": "kot_chernobog",
       "name": "Ночевик",
-      "number": 90
+      "number": 91
     },
     {
       "speciesId": "chudo_yudo",
       "name": "Чудо-юдо",
-      "number": 91
+      "number": 92
     },
     {
       "speciesId": "zilant",
       "name": "Зилант",
-      "number": 92
+      "number": 93
     },
     {
       "speciesId": "sery_volk",
       "name": "Серый Волк",
-      "number": 93
+      "number": 94
     },
     {
       "speciesId": "ak_bars",
       "name": "Ак Барс",
-      "number": 94
+      "number": 95
     },
     {
       "speciesId": "tulpar",
       "name": "Тулпар",
-      "number": 95
+      "number": 96
     },
     {
       "speciesId": "medved_lipovaya",
       "name": "Медведь — липовая нога",
-      "number": 96
+      "number": 97
     },
     {
       "speciesId": "byk_kholoda",
       "name": "Бык Холода",
-      "number": 97
+      "number": 98
     },
     {
       "speciesId": "zemlyanaya_koshka",
       "name": "Земляная кошка",
-      "number": 98
+      "number": 99
     },
     {
       "speciesId": "amba",
       "name": "Амба",
-      "number": 99
+      "number": 100
     },
     {
       "speciesId": "simargl",
       "name": "Симаргл",
-      "number": 100
+      "number": 101
     },
     {
       "speciesId": "yashcher",
       "name": "Ящер",
-      "number": 101
+      "number": 102
     },
     {
       "speciesId": "alenky_tsvetochek",
       "name": "Аленький цветочек",
-      "number": 102
+      "number": 103
     },
     {
       "speciesId": "kamenny_tsvetok",
       "name": "Каменный цветок",
-      "number": 103
+      "number": 104
     },
     {
       "speciesId": "kotofey",
       "name": "Кот-Котофей",
-      "number": 104
+      "number": 105
     },
     {
       "speciesId": "zolotaya_shchetinka",
       "name": "Золотая щетинка",
-      "number": 105
+      "number": 106
     },
     {
       "speciesId": "aralez",
       "name": "Аралез",
-      "number": 106
+      "number": 107
     },
     {
       "speciesId": "snezhny_lev",
       "name": "Снежный лев",
-      "number": 107
+      "number": 108
     },
     {
       "speciesId": "laska",
       "name": "Ласка",
-      "number": 108
+      "number": 109
     },
     {
       "speciesId": "vodyanoy_byk",
       "name": "Водяной бык",
-      "number": 109
+      "number": 110
     },
     {
       "speciesId": "veselka",
       "name": "Веселка",
-      "number": 110
+      "number": 111
     },
     {
       "speciesId": "enudr",
       "name": "Енудр",
-      "number": 111
+      "number": 112
     },
     {
       "speciesId": "repun_kamuy",
       "name": "Рэпун Камуй",
-      "number": 112
+      "number": 113
     },
     {
       "speciesId": "akkorokamuy",
       "name": "Аккорокамуй",
-      "number": 113
+      "number": 114
     },
     {
       "speciesId": "rogataya_zmeya",
       "name": "Рогатая змея",
-      "number": 114
+      "number": 115
     },
     {
       "speciesId": "volosatik",
       "name": "Волосатик",
-      "number": 115
+      "number": 116
     },
     {
       "speciesId": "pardus",
       "name": "Пардус",
-      "number": 116
+      "number": 117
     },
     {
       "speciesId": "skimen",
       "name": "Скимен",
-      "number": 117
+      "number": 118
     },
     {
       "speciesId": "balaur",
       "name": "Балаур",
-      "number": 118
+      "number": 119
     },
     {
       "speciesId": "razryv_trava",
       "name": "Разрыв-трава",
-      "number": 119
+      "number": 120
     },
     {
       "speciesId": "plakun_trava",
       "name": "Плакун-трава",
-      "number": 120
+      "number": 121
     },
     {
       "speciesId": "son_trava",
       "name": "Сон-трава",
-      "number": 121
+      "number": 122
     },
     {
       "speciesId": "los_hiisi",
       "name": "Лось Хийси",
-      "number": 122
+      "number": 123
     },
     {
       "speciesId": "koza_dereza",
       "name": "Коза-дереза",
-      "number": 123
+      "number": 124
     },
     {
       "speciesId": "zemlyanoy_olen",
       "name": "Земляной олень",
-      "number": 124
+      "number": 125
     },
     {
       "speciesId": "bukha_noyon",
       "name": "Буха-нойон",
-      "number": 125
+      "number": 126
     },
     {
       "speciesId": "sin_kamen",
       "name": "Синь-камень",
-      "number": 126
+      "number": 127
     },
     {
       "speciesId": "vedmin_krug",
       "name": "Ведьмин круг",
-      "number": 127
+      "number": 128
     },
     {
       "speciesId": "kamen_sledovik",
       "name": "Камень-следовик",
-      "number": 128
+      "number": 129
     },
     {
       "speciesId": "kok_bori",
       "name": "Кок-бори",
-      "number": 129
+      "number": 130
     },
     {
       "speciesId": "nebesny_los",
       "name": "Небесный лось",
-      "number": 130
+      "number": 131
     },
     {
       "speciesId": "spolokh",
       "name": "Сполох",
-      "number": 131
+      "number": 132
     },
     {
       "speciesId": "yarchuk",
       "name": "Ярчук",
-      "number": 132
+      "number": 133
     },
     {
       "speciesId": "shakhapet",
       "name": "Шахапет",
-      "number": 133
+      "number": 134
     },
     {
       "speciesId": "nebesny_medved",
       "name": "Небесный медведь",
-      "number": 134
+      "number": 135
     },
     {
       "speciesId": "lunny_zayats",
       "name": "Лунный заяц",
-      "number": 135
+      "number": 136
     },
     {
       "speciesId": "korkodil",
       "name": "Коркодил",
-      "number": 136
+      "number": 137
     },
     {
       "speciesId": "akhlut",
       "name": "Акхлут",
-      "number": 137
+      "number": 138
     },
     {
       "speciesId": "myandash",
       "name": "Мяндаш",
-      "number": 138
+      "number": 139
+    },
+    {
+      "speciesId": "mizgir",
+      "name": "Мизгирь",
+      "number": 140
+    },
+    {
+      "speciesId": "mara",
+      "name": "Мара",
+      "number": 141
     }
   ]
 };if(typeof module!=='undefined'&&module.exports)module.exports=data;root.MifoChronicle=data;})(typeof globalThis!=='undefined'?globalThis:this);

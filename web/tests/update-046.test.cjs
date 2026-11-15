@@ -10,18 +10,18 @@ test('an interrupted worker startup returns a recoverable error instead of escap
  }
 });
 
-test('138 current spirits are searchable and usable in arena, raids and upgrades',()=>{
- assert.equal(catalog.version,'0.46');assert.deepEqual(catalog,D.catalog);assert.equal(chronicle.entries.length,138);
- assert.equal(new Set(catalog.species.map(s=>s.id)).size,148);assert.equal(catalog.retired.length,10);
+test('141 current spirits are searchable and usable in arena, raids and upgrades',()=>{
+ assert.equal(catalog.version,'0.67');assert.deepEqual(catalog,D.catalog);assert.equal(chronicle.entries.length,141);
+ assert.equal(new Set(catalog.species.map(s=>s.id)).size,150);assert.equal(catalog.retired.length,9);
  for(const row of chronicle.entries){
   const species=catalog.species.find(s=>s.id===row.speciesId);assert.ok(species);assert.ok(!catalog.retired.includes(species.id));
   assert.ok(S.matches(String(row.number),species.id,species.name));assert.ok(S.matches(species.name,species.id,species.name));
   const config=C.defaultConfig(species.id,20,8),member=C.fighter(config,catalog);assert.ok(member.power>0);
   assert.ok(R.solo([config],'rarog').damage>0);assert.ok(U.plan(config,catalog,40).powerGain>0);
  }
- assert.equal(S.label('chudo_yudo'),'№091');assert.equal(S.label('myandash'),'№138');
+ assert.equal(S.label('chudo_yudo'),'№092');assert.equal(S.label('myandash'),'№139');
  const context={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../rankings.js'),'utf8'),context);
- const rank=context.MifoRankings;assert.equal(rank.speciesCount,138);assert.equal(rank.battles,604992);assert.equal(rank.sourceHash,catalog.sha256);
+ const rank=context.MifoRankings;assert.equal(rank.speciesCount,141);assert.equal(rank.battles,631680);assert.equal(rank.sourceHash,catalog.sha256);
  assert.deepEqual([...rank.rows.map(s=>s.id)].sort(),chronicle.entries.map(s=>s.speciesId).sort());
 });
 test('new caught copies preserve exact stats, sparks and offline cache; old copies remain supported',()=>{
@@ -58,14 +58,19 @@ test('living water restores half HP, retains energy, respects two uses, time and
  const result=R.group([strong,strong,strong,strong,strong,strong],'volkodlak',{revives:2,silaPotion:true,attack:1,defense:1});assert.ok(result.won);assert.ok(result.players.every(p=>p.revivesUsed===0));
  assert.equal(result.players.reduce((sum,p)=>sum+p.damage,0),result.hpMax);
 });
-test('current catalogue, numbers, costs, bosses and runes match original 0.46',{skip:!hasReference},()=>{
- const ref=reference.load(),upgrade=require('../upgrade-data.js');assert.deepEqual(catalog.species,ref.species);assert.deepEqual(catalog.retired,ref.retired);assert.deepEqual(chronicle.entries,ref.chronicle);
+test('historical species and battle rules remain unchanged; reactivated Medunitsa shifts numbers',{skip:!hasReference},()=>{
+ const ref=reference.load(),upgrade=require('../upgrade-data.js');
+ assert.deepEqual(catalog.species.filter(row=>ref.species.some(old=>old.id===row.id)),ref.species);
+ assert.deepEqual(catalog.retired,ref.retired.filter(id=>id!=='medunitsa'));
+ const active=ref.species.filter(row=>!catalog.retired.includes(row.id));
+ assert.deepEqual(chronicle.entries.slice(0,active.length),active.map((row,index)=>({speciesId:row.id,name:row.name,number:index+1})));
  assert.deepEqual(D.rules,ref.rules.boss);assert.deepEqual(D.battle,ref.rules.battle);assert.deepEqual(D.brew,ref.rules.brew);assert.deepEqual(C.RUNES,ref.runes);
  assert.deepEqual(upgrade.dust,ref.rules.powerUp.dust);assert.deepEqual(upgrade.sparks,ref.rules.powerUp.sparks);assert.deepEqual(upgrade.playerXp,ref.rules.player.levels);
 });
 test('276 current client raid simulations match, including new spirits, strength potion and revivals',{skip:!hasReference},()=>{
  const ctx=reference.load().context(),random=C.rng('046-parity');let revived=0;
- const active=catalog.species.filter(s=>!catalog.retired.includes(s.id));
+ const referenceIds=new Set(reference.load().species.map(s=>s.id));
+ const active=catalog.species.filter(s=>!catalog.retired.includes(s.id)&&referenceIds.has(s.id));
  for(let index=0;index<276;index++){
   const team=Array.from({length:1+index%6},(_,slot)=>{const config=C.defaultConfig(active[(index+slot)%active.length].id,1+Math.floor(random()*40),Math.floor(random()*16));config.health=15+Math.floor(random()*86);if(slot%2)config.nature={up:'sila',down:'stoikost'};return config;});
   const bossId=D.bosses[index%12].id,options=R.settings({seed:'046-'+index,attack:[0,.5,.8,1][index%4],defense:[0,.8,1][index%3],attackRuneMs:index%2?3000:900,defenseRuneMs:index%3?2500:500,swapMs:[0,500,9000,10000][index%4],durationMs:index%5?178000:10000,silaPotion:index%2===1,revives:index%3});

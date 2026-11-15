@@ -162,13 +162,12 @@
     "ugolny_zhuk",
     "uzh_tsar",
     "zapechnik",
-    "bozhya_korovka",
-    "medunitsa"
+    "bozhya_korovka"
   ],
   "catalog": {
-    "version": "0.46",
-    "source": "https://mifozov.com/assets/index-CwPus7qr.js",
-    "sha256": "b4842122568b98bf39a45b155b97a1a2a57a6a44bd4aa7d948f6deab5f205a2d",
+    "version": "0.67",
+    "source": "https://mifozov.com/assets/index-CRYMzDSH.js",
+    "sha256": "8826ff489112a0da9d33584177fd6b4306f313606c579e6a41aa74a14a4fd21c",
     "species": [
       {
         "id": "ogonyok",
@@ -2441,6 +2440,36 @@
           "pryt": 170,
           "duh": 110
         }
+      },
+      {
+        "id": "mizgir",
+        "name": "Мизгирь",
+        "rarity": "rare",
+        "elements": [
+          "nav"
+        ],
+        "base": {
+          "zhivitsa": 140,
+          "sila": 125,
+          "stoikost": 130,
+          "pryt": 165,
+          "duh": 215
+        }
+      },
+      {
+        "id": "mara",
+        "name": "Мара",
+        "rarity": "rare",
+        "elements": [
+          "nav"
+        ],
+        "base": {
+          "zhivitsa": 150,
+          "sila": 135,
+          "stoikost": 140,
+          "pryt": 175,
+          "duh": 235
+        }
       }
     ],
     "excluded": [
@@ -2455,8 +2484,7 @@
       "ugolny_zhuk",
       "uzh_tsar",
       "zapechnik",
-      "bozhya_korovka",
-      "medunitsa"
+      "bozhya_korovka"
     ]
   },
   "bosses": [
